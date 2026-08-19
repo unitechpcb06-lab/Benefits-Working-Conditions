@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UNITECH PCB | สวัสดิการและการทำงาน</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0B2E5B;
+    --navy-2:#123A6E;
+    --blue:#0E5FA8;
+    --gold:#E8A33D;
+    --gold-2:#C9822A;
+    --bg:#F2F5F9;
+    --card:#FFFFFF;
+    --line:#DCE4EE;
+    --text:#20304A;
+    --muted:#5A6B84;
+    --green:#1E8A5F;
+    --red:#C0392B;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Sarabun',sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'JetBrains Mono',monospace;letter-spacing:.04em;}
+
+  /* ===== Header / conveyor motif ===== */
+  header{
+    background:linear-gradient(155deg,var(--navy) 0%,var(--navy-2) 70%);
+    color:#fff;
+    padding:38px 24px 0;
+    position:relative;
+    overflow:hidden;
+  }
+  header .eyebrow{
+    font-size:12px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    color:#9FC3EA;
+    text-align:center;
+    margin-bottom:10px;
+  }
+  header h1{
+    text-align:center;
+    font-size:clamp(26px,5vw,40px);
+    margin:0 0 6px;
+    font-weight:800;
+  }
+  header p.sub{
+    text-align:center;
+    color:#CBDCF0;
+    margin:0 0 26px;
+    font-size:15px;
+  }
+  .belt{
+    display:flex;
+    justify-content:center;
+    gap:0;
+    border-top:1px solid rgba(255,255,255,.15);
+    overflow-x:auto;
+    scrollbar-width:none;
+  }
+  .belt::-webkit-scrollbar{display:none;}
+  .tab{
+    flex:0 0 auto;
+    padding:16px 20px 14px;
+    font-size:14px;
+    font-weight:600;
+    color:#B9CDE6;
+    background:none;
+    border:none;
+    cursor:pointer;
+    border-bottom:3px solid transparent;
+    white-space:nowrap;
+    transition:.15s;
+  }
+  .tab:hover{color:#fff;}
+  .tab.active{color:#fff;border-bottom-color:var(--gold);}
+
+  main{max-width:960px;margin:0 auto;padding:28px 18px 80px;}
+  section{display:none;animation:fade .25s ease;}
+  section.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:22px 24px;
+    margin-bottom:18px;
+    box-shadow:0 1px 2px rgba(11,46,91,.04);
+  }
+  .card h2{
+    font-size:19px;
+    margin:0 0 14px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .card h2 .tag{
+    font-size:11px;
+    font-weight:700;
+    background:var(--blue);
+    color:#fff;
+    padding:3px 9px;
+    border-radius:999px;
+    letter-spacing:.03em;
+  }
+  ul.plain{margin:0;padding-left:20px;}
+  ul.plain li{margin-bottom:8px;line-height:1.55;}
+  ul.plain li b{color:var(--navy);}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
+
+  /* ===== stepper / approval chain ===== */
+  .stepper{
+    display:flex;
+    align-items:center;
+    margin:18px 0 6px;
+    overflow-x:auto;
+  }
+  .step{
+    flex:1;
+    text-align:center;
+    position:relative;
+    padding-top:34px;
+    min-width:110px;
+    font-size:13px;
+    font-weight:700;
+    color:var(--navy);
+  }
+  .step::before{
+    content:"";
+    position:absolute;
+    top:8px;left:50%;
+    width:20px;height:20px;
+    background:var(--blue);
+    border-radius:50%;
+    transform:translateX(-50%);
+    z-index:2;
+  }
+  .step::after{
+    content:"";
+    position:absolute;
+    top:17px;left:-50%;
+    width:100%;height:3px;
+    background:var(--line);
+    z-index:1;
+  }
+  .step:first-child::after{display:none;}
+  .step span{display:block;font-size:11px;font-weight:500;color:var(--muted);margin-top:2px;}
+
+  .callout{
+    border-radius:14px;
+    padding:16px 18px;
+    margin-top:14px;
+    font-size:14px;
+    line-height:1.6;
+  }
+  .callout.warn{background:#FFF6E9;border:1px solid var(--gold);}
+  .callout.danger{background:#FDECEA;border:1px solid var(--red);color:#7A241C;}
+  .callout.ok{background:#EAF7F1;border:1px solid var(--green);color:#155F41;}
+
+  /* ===== shift cards (attendance tab) ===== */
+  .shift-card{
+    border-radius:18px;
+    border:1px solid var(--line);
+    overflow:hidden;
+    margin-bottom:20px;
+    background:#fff;
+    box-shadow:0 1px 2px rgba(11,46,91,.05);
+  }
+  .shift-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 22px;color:#fff;
+  }
+  .shift-head .name{font-size:19px;font-weight:800;display:flex;align-items:center;gap:8px;}
+  .shift-head .hours{
+    font-size:12.5px;font-weight:700;background:rgba(255,255,255,.22);
+    padding:5px 12px;border-radius:999px;white-space:nowrap;
+  }
+  .shift-am{background:linear-gradient(120deg,#F0AE42,#E0902A);}
+  .shift-pm{background:linear-gradient(120deg,#E67E4D,#CC5F2C);}
+  .shift-nt{background:linear-gradient(120deg,#2C4E8C,#0B2E5B);}
+
+  .shift-body{padding:18px 22px 20px;}
+  .tl{display:flex;height:34px;border-radius:9px;overflow:hidden;box-shadow:inset 0 0 0 1px var(--line);}
+  .tl .w{background:var(--blue);}
+  .tl .b{background:#DCE4F0;}
+  .tl-legend{display:flex;gap:16px;margin:8px 0 14px;font-size:11.5px;color:var(--muted);}
+  .tl-legend span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:9px;height:9px;border-radius:3px;display:inline-block;}
+  .dot.w{background:var(--blue);}
+  .dot.b{background:#DCE4F0;border:1px solid #B9C6DA;}
+
+  .chiprow{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+  .chip{
+    font-size:12.5px;font-weight:600;padding:6px 12px;border-radius:999px;
+    background:var(--bg);border:1px solid var(--line);color:var(--text);
+  }
+  .chip.brk{background:#F4F1EA;color:#8A6A2E;border-color:#E9DDC0;}
+
+  .leavebox{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px 16px;}
+  .leaverow{
+    display:flex;justify-content:space-between;align-items:center;gap:14px;
+    padding:11px 0;border-bottom:1px solid var(--line);font-size:13.5px;
+  }
+  .leaverow:last-child{border-bottom:none;}
+  .leaverow .cond{color:var(--muted);}
+  .leaverow .keyed{font-weight:700;color:var(--navy);background:#fff;border:1px solid var(--line);padding:4px 10px;border-radius:8px;white-space:nowrap;}
+
+  /* ===== contact directory ===== */
+  .contact-card{
+    display:flex;gap:16px;
+    background:#fff;border:1px solid var(--line);border-radius:16px;
+    padding:20px 22px;margin-bottom:16px;
+    align-items:flex-start;
+  }
+  .contact-badge{
+    flex:0 0 auto;width:46px;height:46px;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;color:#fff;
+  }
+  .contact-body b{display:block;font-size:16.5px;color:var(--navy);margin-bottom:4px;}
+  .contact-body .loc{font-size:12.5px;font-weight:700;color:var(--gold-2);margin-bottom:6px;}
+  .contact-body p{margin:0;font-size:14px;line-height:1.6;color:var(--text);}
+  .contact-body a{color:var(--blue);font-weight:600;}
+
+  /* ===== annual rota tab ===== */
+  .rota-groupbar{display:flex;gap:10px;margin-bottom:14px;}
+  .rota-groupbtn{
+    flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);
+    background:#fff;font-weight:700;font-size:14.5px;color:var(--muted);cursor:pointer;
+  }
+  .rota-groupbtn.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+  .rota-teams{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+  .rota-teambtn{
+    min-width:52px;padding:10px 14px;border-radius:10px;border:1px solid var(--line);
+    background:#fff;font-weight:700;font-size:15px;color:var(--navy);cursor:pointer;
+  }
+  .rota-teambtn.active{background:var(--gold);border-color:var(--gold-2);color:#fff;}
+  .rota-imgwrap{
+    border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;
+    text-align:center;
+  }
+  .rota-imgwrap img{width:100%;display:block;}
+  .rota-caption{font-size:13px;color:var(--muted);margin-top:10px;text-align:center;}
+
+
+  /* ===== calculator ===== */
+  label{display:block;font-size:13px;font-weight:600;color:var(--navy);margin:12px 0 6px;}
+  select,input[type=number]{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    font-family:'Sarabun',sans-serif;
+    font-size:15px;
+    background:#fff;
+  }
+  .row3{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:520px){.row3{grid-template-columns:1fr;}}
+  button.calc{
+    margin-top:18px;
+    width:100%;
+    padding:13px;
+    border:none;
+    border-radius:10px;
+    background:var(--navy);
+    color:#fff;
+    font-weight:700;
+    font-size:15px;
+    cursor:pointer;
+  }
+  button.calc:active{background:var(--navy-2);}
+  .result{
+    margin-top:16px;
+    background:var(--bg);
+    border:1px dashed var(--blue);
+    border-radius:12px;
+    padding:16px;
+    font-size:14px;
+    display:none;
+  }
+  .result.show{display:block;}
+  .result .big{font-size:26px;font-weight:800;color:var(--navy);}
+  .disclaimer{font-size:12px;color:var(--muted);margin-top:10px;}
+
+  /* ===== checklist ===== */
+  .check-item{
+    display:flex;align-items:flex-start;gap:12px;
+    padding:12px 4px;border-bottom:1px solid var(--line);
+  }
+  .check-item:last-child{border-bottom:none;}
+  .check-item input{width:20px;height:20px;margin-top:2px;accent-color:var(--blue);}
+  .check-item label{margin:0;font-weight:500;color:var(--text);font-size:14.5px;line-height:1.5;cursor:pointer;}
+  .check-item small{display:block;color:var(--muted);font-weight:400;margin-top:2px;}
+  .reset-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px;}
+  .reset-row button{
+    background:none;border:1px solid var(--line);color:var(--muted);
+    padding:8px 14px;border-radius:8px;font-size:13px;cursor:pointer;
+  }
+  .date-badge{font-size:12px;color:var(--muted);}
+
+  footer{
+    text-align:center;padding:24px;color:var(--muted);font-size:13px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">UNITECH PCB (THAILAND) CO., LTD.</div>
+  <h1>สวัสดิการและการทำงาน</h1>
+  <p class="sub">คู่มือฉบับพนักงาน — เข้าใจง่าย ใช้จริงได้</p>
+  <div class="belt" id="tabbar">
+    <button class="tab active" data-tab="benefits">สวัสดิการ</button>
+    <button class="tab" data-tab="calc">คำนวณค่าแรง</button>
+    <button class="tab" data-tab="ot">ขั้นตอน OT</button>
+    <button class="tab" data-tab="attendance">เวลาเข้า–ออกงาน</button>
+    <button class="tab" data-tab="checklist">เช็คลิสต์วันนี้</button>
+    <button class="tab" data-tab="law">กฎหมายน่ารู้</button>
+    <button class="tab" data-tab="contact">ติดต่อฝ่ายไหน</button>
+    <button class="tab" data-tab="rota">ตารางการทำงานประจำปี</button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ TAB 1: BENEFITS ============ -->
+  <section id="benefits" class="active">
+    <div class="grid2">
+      <div class="card">
+        <h2>ค่าตอบแทน <span class="tag">เงิน</span></h2>
+        <ul class="plain">
+          <li>รายวัน <b>375–475 บาท/วัน</b></li>
+          <li>รายเดือน: ตามโครงสร้างบริษัท — ผ่านโปร (ครบ 119 วัน) แล้ว <b>บริษัทไม่มีนโยบายปรับเงินเดือนอัตโนมัติ</b> เว้นแต่จะระบุไว้ในสัญญาจ้าง</li>
+          <li>จ่ายเงินเดือนทุกวันที่ <b>10</b> ผ่านธนาคารกรุงเทพ</li>
+          <li>พนักงานใหม่เปิดบัญชี ธ.กรุงเทพ (สาขาอ่างทอง) <b>ฟรี</b></li>
+          <li>ค่าประสบการณ์สาย PCB (ต้องมีหนังสือรับรองงานเดิม)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>เบี้ยเลี้ยงกะ <span class="tag">กะ</span></h2>
+        <ul class="plain">
+          <li>รายวัน กะดึก <b>80 บาท/วัน</b></li>
+          <li>รายเดือน กะบ่าย/กะดึก <b>100 บาท/วัน</b></li>
+          <li>ค่าเดินทาง 30 บ./วัน + ค่าที่พัก 30 บ./วัน (ไม่พักหอบริษัท)</li>
+          <li>จ่ายตาม “วันที่มาทำงานจริง” เท่านั้น ไม่ใช่วันทั้งเดือน</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>สุขภาพและความเป็นอยู่ <span class="tag">ชีวิต</span></h2>
+        <ul class="plain">
+          <li>ตรวจสุขภาพก่อนเข้างาน + ประจำปี <b>ฟรี</b></li>
+          <li>หอพักสวัสดิการบริษัท (ห้องละ 4 คน)</li>
+          <li>อาหารกลางวันฟรี <b>1 มื้อ</b> และหากทำ OT ตั้งแต่ <b>2 ชั่วโมงขึ้นไป</b> รับอาหารเพิ่มอีก <b>1 มื้อ</b> — ต้อง<b>แจ้งชื่อล่วงหน้าให้ฝ่าย GA</b> ทราบ เพื่อคำนวณจำนวนอาหาร</li>
+          <li>ชุดยูนิฟอร์ม เมื่อทำงานครบ 1 เดือน รับได้ <b>2 ตัว</b> ที่<b>ชั้น 4</b> ทุกวัน<b>พุธ 09:00–09:30 น.</b><br>
+            <small style="color:var(--muted);">บริษัทไม่ได้เข้มงวดเรื่องการแต่งกาย ไม่จำเป็นต้องใส่เสื้อบริษัทก็ได้ แต่งกายสุภาพเป็นพอ — แต่ต้อง<b>ติดบัตรพนักงานทุกครั้ง</b>ที่เข้ามาในโรงงาน</small></li>
+          <li>ประกันสังคมตามที่กฎหมายกำหนด</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>วันหยุด–วันลา <span class="tag">พัก</span></h2>
+        <ul class="plain">
+          <li>วันหยุดนักขัตฤกษ์ <b>13 วัน/ปี</b> — ดูวันที่ชัดเจนได้จาก<b>การ์ดวันหยุดที่แจกให้ในวันแรกที่เริ่มงาน</b></li>
+          <li>วันลาพักร้อน <b>6 วัน/ปี</b> — เริ่มใช้ได้หลังทำงานครบ 1 ปี และใช้ได้ตลอดปีถัดไป<br>
+            <small style="color:var(--muted);">ตัวอย่าง: เริ่มงาน 18/08/25 → เริ่มใช้สิทธิได้ตั้งแต่ 18/08/26 ถึง 18/08/27 ถ้าใช้ไม่หมดภายในช่วงนี้ <b>บริษัทจ่ายคืนเป็นเงินให้ทุกกรณี</b></small></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <h2>ลากิจ <span class="tag">สิทธิตามกฎหมาย</span></h2>
+        <ul class="plain">
+          <li>พนักงานมีสิทธิลากิจธุระอันจำเป็น ได้ <b>3 วัน/ปี โดยได้รับค่าจ้าง</b> ตามที่กฎหมายแรงงานกำหนด</li>
+          <li>ใช้สำหรับธุระจำเป็นที่ต้องทำด้วยตนเอง เช่น ติดต่อราชการ ธุระครอบครัวเร่งด่วน</li>
+          <li><b>วิธีใช้สิทธิ:</b> ยื่นใบลาต่อหัวหน้างานล่วงหน้าก่อนวันที่ต้องการลา ระบุวันที่และเหตุผลให้ชัดเจน รอหัวหน้างานอนุมัติก่อนจึงจะถือว่าลาถูกต้อง</li>
+          <li>กรณีฉุกเฉินที่แจ้งล่วงหน้าไม่ได้ ให้รีบแจ้งหัวหน้างานโดยเร็วที่สุด แล้วยื่นใบลาย้อนหลังทันทีที่กลับมาทำงาน</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h2>ลาคลอด <span class="tag">สิทธิตามกฎหมาย · อัปเดตล่าสุด</span></h2>
+        <ul class="plain">
+          <li>พนักงานหญิงลาคลอดได้ <b>ไม่เกิน 120 วัน</b> ต่อการตั้งครรภ์หนึ่งครั้ง (นับรวมลาฝากครรภ์และวันหยุดที่อยู่ในช่วงลา)</li>
+          <li><b>บริษัทจ่ายค่าจ้างให้เต็ม</b> ในช่วง <b>60 วันแรก</b></li>
+          <li>ส่วนที่เหลือ สามารถเบิกจาก<b>ประกันสังคม</b>ได้ตามสิทธิ (ประมาณ 50% ของค่าจ้างเฉลี่ย สูงสุด 90 วัน สำหรับผู้ประกันตนที่ส่งเงินสมทบครบเงื่อนไข)</li>
+          <li>ต้องแจ้งการตั้งครรภ์กับหัวหน้างาน/ฝ่ายบุคคลโดยเร็วที่สุด เพื่อจัดเตรียมเอกสารลาและย้ายออกจากพื้นที่เสี่ยงตามกฎหมาย</li>
+        </ul>
+        <p style="font-size:12px;color:var(--muted);margin:10px 0 0;">ปรับเพิ่มจากเดิม 98 วัน ตาม พ.ร.บ.คุ้มครองแรงงาน (ฉบับที่ 9) พ.ศ. 2568 มีผลบังคับใช้ 7 ธ.ค. 2568</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>ลาไปช่วยเหลือคู่สมรสที่คลอดบุตร <span class="tag">สิทธิใหม่</span></h2>
+      <ul class="plain">
+        <li>พนักงานที่มี<b>คู่สมรสคลอดบุตร</b> มีสิทธิลาได้ <b>ไม่เกิน 15 วัน</b> ต่อการคลอดหนึ่งครั้ง</li>
+        <li>ต้องใช้สิทธิ<b>ภายใน 90 วัน</b> นับจากวันที่คู่สมรสคลอดบุตร (ลาต่อเนื่องหรือแบ่งลาก็ได้ภายในกรอบเวลานี้)</li>
+        <li><b>ได้รับค่าจ้างเต็ม 100%</b> ตลอดระยะเวลาที่ลา</li>
+        <li>ยื่นใบลาต่อหัวหน้างานพร้อมแจ้งกำหนด/วันที่คลอดของคู่สมรส</li>
+      </ul>
+      <p style="font-size:12px;color:var(--muted);margin:10px 0 0;">สิทธิใหม่ตามมาตรา 41/1 ของ พ.ร.บ.คุ้มครองแรงงาน (ฉบับที่ 9) พ.ศ. 2568</p>
+    </div>
+
+    <div class="card">
+      <h2>เวลาทำงานตามประเภทกะ</h2>
+      <div class="grid2">
+        <div>
+          <b>พนักงานรายวัน</b>
+          <ul class="plain">
+            <li>กะเช้า 08:00–17:20 น.</li>
+            <li>กะดึก 20:00–05:20 น.</li>
+          </ul>
+        </div>
+        <div>
+          <b>พนักงานรายเดือน</b>
+          <ul class="plain">
+            <li>กะเช้า 08:00–16:40 น.</li>
+            <li>กะบ่าย 16:00–00:40 น.</li>
+            <li>กะดึก 00:00–08:40 น.</li>
+          </ul>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--muted);margin-top:10px;">
+        Office (IDL): วันหยุดหมุนเวียน (บริษัทกำหนดตาราง) ·
+        Production (DL): ทำงาน 6 วัน หยุด 1 วัน (วันหยุดหมุนเวียนตามตาราง)
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ TAB 2: CALCULATOR ============ -->
+  <section id="calc">
+    <div class="card">
+      <h2>คำนวณค่าเดินทาง + ที่พัก (ประมาณการ)</h2>
+      <div class="row3">
+        <div>
+          <label>จำนวนวันที่ทำงานเต็มวัน (8 ชม.)</label>
+          <input type="number" id="daysWorked" min="0" max="31" placeholder="เช่น 24">
+        </div>
+        <div>
+          <label>จำนวนวันที่ทำงานครึ่งวัน (ขั้นต่ำ 4 ชม.)</label>
+          <input type="number" id="halfDaysWorked" min="0" max="31" placeholder="เช่น 2">
+        </div>
+      </div>
+      <button class="calc" onclick="calcAllowance()">คำนวณ</button>
+      <div class="result" id="allowanceResult"></div>
+      <p class="disclaimer">นับเฉพาะ “วันทำงานปกติ” เท่านั้น — <b>ไม่นับ</b>วันหยุด/วันลาที่ไม่ได้มาทำงาน และ<b>ไม่นับเพิ่ม</b>แม้จะมาทำ OT ในวันหยุดก็ตาม วันทำงานเต็มวันได้ค่าเดินทาง+ที่พัก 30+30 บาท/วัน ส่วนวันที่ทำงานอย่างน้อย 4 ชั่วโมง (ครึ่งวัน) ได้ 15+15 บาท/วัน (สำหรับพนักงานที่ไม่ได้พักหอบริษัท)</p>
+    </div>
+
+    <div class="card">
+      <h2>คำนวณค่า OT โดยประมาณ (พนักงานรายวัน)</h2>
+      <div class="row3">
+        <div>
+          <label>ค่าจ้างฐานต่อวัน (บาท)</label>
+          <input type="number" id="dailyWage" placeholder="เช่น 400">
+        </div>
+        <div>
+          <label>ประเภทการทำงาน</label>
+          <select id="otType">
+            <option value="1.5">OT วันทำงานปกติ หลังเลิกงาน (1.5 เท่า)</option>
+            <option value="2">ทำงานในวันหยุด (2 เท่า)</option>
+            <option value="3">OT หลัง 8 ชั่วโมงในวันหยุด (3 เท่า)</option>
+          </select>
+        </div>
+      </div>
+      <label>จำนวนชั่วโมง OT</label>
+      <input type="number" id="otHours" placeholder="เช่น 4">
+      <button class="calc" onclick="calcOT()">คำนวณ</button>
+      <div class="result" id="otResult"></div>
+      <p class="disclaimer">ใช้ “ค่าจ้างฐาน” เท่านั้น (<b>ไม่รวม</b>ค่าตำแหน่ง ค่าเบี้ยเลี้ยงกะ หรือค่าตอบแทนอื่น ๆ) คิดจาก ค่าจ้างฐานต่อวัน ÷ 8 ชั่วโมง × อัตราเท่า × จำนวนชั่วโมง OT เป็นตัวเลขโดยประมาณเพื่อความเข้าใจเบื้องต้นเท่านั้น ยอดจริงยึดตามการคำนวณของฝ่ายบุคคล</p>
+    </div>
+
+    <div class="card">
+      <h2>คำนวณค่า OT โดยประมาณ (พนักงานรายเดือน)</h2>
+      <div class="row3">
+        <div>
+          <label>เงินเดือนฐาน (บาท/เดือน)</label>
+          <input type="number" id="monthlyWage" placeholder="เช่น 12000">
+        </div>
+        <div>
+          <label>ประเภทการทำงาน</label>
+          <select id="otTypeMonthly">
+            <option value="1.5">OT วันทำงานปกติ หลังเลิกงาน (1.5 เท่า)</option>
+            <option value="1">ทำงานในวันหยุด ภายใน 8 ชม. (ได้เพิ่มอีก 1 เท่า)</option>
+            <option value="3">OT หลัง 8 ชั่วโมงในวันหยุด (3 เท่า)</option>
+          </select>
+        </div>
+      </div>
+      <label>จำนวนชั่วโมง OT</label>
+      <input type="number" id="otHoursMonthly" placeholder="เช่น 4">
+      <button class="calc" onclick="calcOTMonthly()">คำนวณ</button>
+      <div class="result" id="otResultMonthly"></div>
+      <p class="disclaimer">ใช้ “เงินเดือนฐาน” เท่านั้น (<b>ไม่รวม</b>ค่าตำแหน่ง ค่าเบี้ยเลี้ยงกะ หรือค่าตอบแทนอื่น ๆ) คิดค่าจ้างต่อวัน = เงินเดือน ÷ 30, ค่าจ้างต่อชั่วโมง = ค่าจ้างต่อวัน ÷ 8 พนักงานรายเดือนได้รับเงินเดือนครอบคลุมวันหยุดอยู่แล้ว ทำงานในวันหยุดจึงได้ “ค่าตอบแทนเพิ่ม” อีก 1 เท่า ไม่ใช่ 2 เท่าแบบรายวัน ตัวเลขนี้เป็นการประมาณการเบื้องต้นเท่านั้น ยอดจริงยึดตามการคำนวณของฝ่ายบุคคล</p>
+    </div>
+  </section>
+
+  <!-- ============ TAB 3: OT PROCESS ============ -->
+  <section id="ot">
+    <div class="card">
+      <h2>กฎการทำ OT ที่ต้องรู้</h2>
+      <div class="callout warn">
+        OT <b>ต้องเกิดจากหัวหน้างานมอบหมาย</b> หรือมีความจำเป็นทางธุรกิจจริงเท่านั้น — ไม่ใช่พนักงานอยากทำเมื่อไหร่ก็ทำได้ แม้จะทำงานเลยเวลาเลิกงานไปแล้วก็ตาม
+      </div>
+      <div class="callout ok" style="margin-top:12px;">
+        ต้อง<b>ยื่นขออนุมัติล่วงหน้า</b>และได้รับความยินยอมจากหัวหน้างานก่อนเริ่มทำ จึงจะสามารถขอเบิกค่า OT ได้
+      </div>
+      <p style="font-size:14px;color:var(--muted);margin-top:12px;margin-bottom:0;">
+        ไม่แน่ใจว่าวันนี้ทำ OT ได้ไหม → สอบถาม<b>หัวหน้างานของตนเองโดยตรง</b>
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>ลำดับการอนุมัติ OT</h2>
+      <div class="stepper">
+        <div class="step">Operator<span>ผู้ขอ</span></div>
+        <div class="step">Coordinator<span>หัวหน้างาน</span></div>
+        <div class="step">Engineer<span>วิศวกร</span></div>
+        <div class="step">Manager<span>ผู้จัดการ</span></div>
+      </div>
+      <div class="callout danger">
+        <b>ต้องอนุมัติให้เสร็จก่อนวันที่ 1 ของเดือน เวลา 12:00 น.</b> เพื่อเข้ารอบตัดจ่ายเงินเดือน<br>
+        หากไม่ทันเวลา → ยอด OT จะถูก<b>ทบไปคำนวณในเดือนถัดไป</b>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>ทำงานในวันหยุด ต้องคีย์ 2 รายการเสมอ</h2>
+      <div class="callout ok">
+        <b>1) คีย์ 8 ชั่วโมง</b> ของวันทำงานปกติ (ฐาน 2 เท่า)<br>
+        <b>2) คีย์ OT</b> สำหรับส่วนที่เกิน/ทำงานหลังเวลา (3 เท่า)
+      </div>
+      <div class="callout danger" style="margin-top:12px;">
+        พนักงานส่วนใหญ่ลืมคีย์ข้อ 1 (8 ชั่วโมง) และคีย์แต่ OT หลังงาน → ทำให้ได้รับค่าตอบแทน<b>ไม่ครบ</b>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>อัตราค่าล่วงเวลา (พนักงานรายวัน)</h2>
+      <ul class="plain">
+        <li>ทำงานในวันหยุด: ได้ <b>2 เท่า</b></li>
+        <li>OT หลัง 8 ชั่วโมง: ได้ <b>3 เท่า</b></li>
+        <li>วันหยุดนักขัตฤกษ์: คำนวณตามกฎหมายเช่นเดียวกัน</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ TAB: ATTENDANCE / LEAVE-KEYING ============ -->
+  <section id="attendance">
+    <h2 style="font-size:16px;color:var(--navy);margin:0 0 14px;">พนักงานรายเดือน (IDL)</h2>
+
+    <div class="shift-card">
+      <div class="shift-head shift-am">
+        <div class="name">☀️&nbsp; กะเช้า</div>
+        <div class="hours">08:00–16:40 น. · ทำงาน 8 ชม. (พัก 40 นาที)</div>
+      </div>
+      <div class="shift-body">
+        <div class="tl">
+          <div class="w" style="flex:46.2" title="ทำงาน 08:00–12:00"></div>
+          <div class="b" style="flex:7.6" title="พัก 12:00–12:40"></div>
+          <div class="w" style="flex:46.2" title="ทำงาน 12:40–16:40"></div>
+        </div>
+        <div class="tl-legend"><span><i class="dot w"></i>ทำงาน</span><span><i class="dot b"></i>พัก</span></div>
+        <div class="chiprow">
+          <span class="chip">ทำงาน 08:00–12:00</span>
+          <span class="chip brk">พัก 40 นาที 12:00–12:40</span>
+          <span class="chip">ทำงาน 12:40–16:40</span>
+        </div>
+        <div class="leavebox">
+          <div class="leaverow"><span class="cond">ลาช่วงเช้า + มาทำงานช่วงบ่าย</span><span class="keyed">คีย์ลา 08:00–12:00</span></div>
+          <div class="leaverow"><span class="cond">ลาช่วงบ่าย</span><span class="keyed">คีย์ลา 12:40–16:40</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shift-card">
+      <div class="shift-head shift-pm">
+        <div class="name">🏙️&nbsp; กะบ่าย</div>
+        <div class="hours">16:00–00:40 น. · ทำงาน 8 ชม. (พัก 40 นาที)</div>
+      </div>
+      <div class="shift-body">
+        <div class="tl">
+          <div class="w" style="flex:46.2" title="ทำงาน 16:00–20:00"></div>
+          <div class="b" style="flex:7.6" title="พัก 20:00–20:40"></div>
+          <div class="w" style="flex:46.2" title="ทำงาน 20:40–00:40"></div>
+        </div>
+        <div class="tl-legend"><span><i class="dot w"></i>ทำงาน</span><span><i class="dot b"></i>พัก</span></div>
+        <div class="chiprow">
+          <span class="chip">ทำงาน 16:00–20:00</span>
+          <span class="chip brk">พัก 40 นาที 20:00–20:40</span>
+          <span class="chip">ทำงาน 20:40–00:40</span>
+        </div>
+        <div class="leavebox">
+          <div class="leaverow"><span class="cond">ลาช่วงแรก + มาทำงานช่วงหลัง</span><span class="keyed">คีย์ลา 16:00–20:00</span></div>
+          <div class="leaverow"><span class="cond">ลาช่วงหลัง</span><span class="keyed">คีย์ลา 20:40–00:40</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shift-card">
+      <div class="shift-head shift-nt">
+        <div class="name">🌙&nbsp; กะดึก</div>
+        <div class="hours">00:00–08:40 น. · ทำงาน 8 ชม. (พัก 40 นาที)</div>
+      </div>
+      <div class="shift-body">
+        <div class="tl">
+          <div class="w" style="flex:46.2" title="ทำงาน 00:00–04:00"></div>
+          <div class="b" style="flex:7.6" title="พัก 04:00–04:40"></div>
+          <div class="w" style="flex:46.2" title="ทำงาน 04:40–08:40"></div>
+        </div>
+        <div class="tl-legend"><span><i class="dot w"></i>ทำงาน</span><span><i class="dot b"></i>พัก</span></div>
+        <div class="chiprow">
+          <span class="chip">ทำงาน 00:00–04:00</span>
+          <span class="chip brk">พัก 40 นาที 04:00–04:40</span>
+          <span class="chip">ทำงาน 04:40–08:40</span>
+        </div>
+        <div class="leavebox">
+          <div class="leaverow"><span class="cond">ลาช่วงแรก + มาทำงานช่วงหลัง</span><span class="keyed">คีย์ลา 00:00–04:00</span></div>
+          <div class="leaverow"><span class="cond">ลาช่วงหลัง</span><span class="keyed">คีย์ลา 04:40–08:40</span></div>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="font-size:16px;color:var(--navy);margin:26px 0 4px;">พนักงานรายวัน (DL)</h2>
+    <p style="font-size:12.5px;color:var(--muted);margin:0 0 4px;">มีผลบังคับใช้ตั้งแต่ 01/08/2569 เป็นต้นไป</p>
+    <p style="font-size:12.5px;color:var(--muted);margin:0 0 14px;">เวลาพักเบรก 20 นาที (ที่แสดงด้านล่าง) เป็นเวลาอ้างอิง — <b>หัวหน้างานเป็นผู้จัดสรร/สลับคิวพักจริง</b> เพื่อให้หน้างานทำงานได้ต่อเนื่อง</p>
+
+    <div class="shift-card">
+      <div class="shift-head shift-am">
+        <div class="name">☀️&nbsp; กะเช้า (DL)</div>
+        <div class="hours">08:00–17:20 น. · ทำงาน 8 ชม. (พัก 1 ชม. 20 นาที)</div>
+      </div>
+      <div class="shift-body">
+        <div class="tl">
+          <div class="w" style="flex:21.4" title="ทำงาน 08:00–10:00"></div>
+          <div class="b" style="flex:3.6" title="พักเบรก ~10:00–10:20"></div>
+          <div class="w" style="flex:21.4" title="ทำงาน 10:20–12:20"></div>
+          <div class="b" style="flex:7.1" title="พักกลางวัน 12:20–13:00"></div>
+          <div class="w" style="flex:10.7" title="ทำงาน 13:00–14:00"></div>
+          <div class="b" style="flex:3.6" title="พักเบรก ~14:00–14:20"></div>
+          <div class="w" style="flex:32.1" title="ทำงาน 14:20–17:20"></div>
+        </div>
+        <div class="tl-legend"><span><i class="dot w"></i>ทำงาน</span><span><i class="dot b"></i>พัก/เบรก</span></div>
+        <div class="chiprow">
+          <span class="chip">เข้างาน 08:00</span>
+          <span class="chip brk">เบรก ~10:00–10:20</span>
+          <span class="chip brk">พักกลางวัน 12:20–13:00</span>
+          <span class="chip brk">เบรก ~14:00–14:20</span>
+          <span class="chip">ออกงาน 17:20</span>
+        </div>
+        <div class="leavebox">
+          <div class="leaverow"><span class="cond">ลาช่วงเช้า + มาทำงานช่วงบ่าย</span><span class="keyed">คีย์ลา 08:00–12:20</span></div>
+          <div class="leaverow"><span class="cond">ลาช่วงบ่าย</span><span class="keyed">คีย์ลา 13:00–17:20</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="shift-card">
+      <div class="shift-head shift-nt">
+        <div class="name">🌙&nbsp; กะดึก (DL)</div>
+        <div class="hours">20:00–05:20 น. (วันถัดไป) · ทำงาน 8 ชม. (พัก 1 ชม. 20 นาที)</div>
+      </div>
+      <div class="shift-body">
+        <div class="tl">
+          <div class="w" style="flex:21.4" title="ทำงาน 20:00–22:00"></div>
+          <div class="b" style="flex:3.6" title="พักเบรก ~22:00–22:20"></div>
+          <div class="w" style="flex:21.4" title="ทำงาน 22:20–00:20"></div>
+          <div class="b" style="flex:7.1" title="พักกลางคืน 00:20–01:00"></div>
+          <div class="w" style="flex:10.7" title="ทำงาน 01:00–02:00"></div>
+          <div class="b" style="flex:3.6" title="พักเบรก ~02:00–02:20"></div>
+          <div class="w" style="flex:32.1" title="ทำงาน 02:20–05:20"></div>
+        </div>
+        <div class="tl-legend"><span><i class="dot w"></i>ทำงาน</span><span><i class="dot b"></i>พัก/เบรก</span></div>
+        <div class="chiprow">
+          <span class="chip">เข้างาน 20:00</span>
+          <span class="chip brk">เบรก ~22:00–22:20</span>
+          <span class="chip brk">พักกลางคืน 00:20–01:00</span>
+          <span class="chip brk">เบรก ~02:00–02:20</span>
+          <span class="chip">ออกงาน 05:20 (วันถัดไป)</span>
+        </div>
+        <div class="leavebox">
+          <div class="leaverow"><span class="cond">ลาช่วงแรก + มาทำงานช่วงหลัง</span><span class="keyed">คีย์ลา 20:00–00:20</span></div>
+          <div class="leaverow"><span class="cond">ลาช่วงหลัง</span><span class="keyed">คีย์ลา 01:00–05:20</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TAB 4: CHECKLIST ============ -->
+  <section id="checklist">
+    <div class="card">
+      <h2>เช็คลิสต์ประจำวัน <span class="date-badge" id="todayDate"></span></h2>
+      <div id="checkList"></div>
+      <div class="reset-row">
+        <span class="date-badge">ติ๊กแล้วจะจำไว้ให้ถึงเที่ยงคืน</span>
+        <button onclick="resetChecklist()">ล้างรายการวันนี้</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TAB 5: LAW ============ -->
+  <section id="law">
+    <div class="card">
+      <h2>สิ่งที่พนักงานควรรู้เพิ่มเติม</h2>
+      <ul class="plain">
+        <li><b>ตั้งครรภ์:</b> แจ้งหัวหน้างาน/ฝ่ายบุคคลทันทีที่ทราบ เพื่อย้ายออกจากพื้นที่เสี่ยงและงดทำ OT ตามกฎหมายคุ้มครองแรงงาน</li>
+        <li><b>การสแกนหน้า:</b> ต้องสแกนเข้า-ออกงานครบทุกครั้ง รวมถึงช่วงลาครึ่งวัน เพื่อบันทึกเวลาทำงานให้ถูกต้อง</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>ขั้นตอนการลาออก</h2>
+      <ul class="plain">
+        <li>แจ้งหัวหน้างานล่วงหน้าตามระยะเวลาที่กำหนด</li>
+        <li>รับใบลาออกที่ <b>ห้องสรรหา</b> (หลังป้อม รปภ.)</li>
+        <li>นำไปให้หัวหน้างานเซ็นอนุมัติ แล้วนำกลับมาส่งที่ห้องสรรหา</li>
+        <li>วันสุดท้ายของการทำงาน: คืนบัตรพนักงาน กุญแจล็อกเกอร์ และอุปกรณ์บริษัททั้งหมดที่ห้องสรรหา (ทั้งพนักงานรายวันและรายเดือน)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>กฎการลาป่วย</h2>
+      <ul class="plain">
+        <li>ลาป่วยได้<b>ตามที่ป่วยจริง</b> โดยได้รับค่าจ้างเต็ม <b>ไม่เกิน 30 วันทำงาน/ปี</b></li>
+        <li>ลาป่วยตั้งแต่ <b>3 วันทำงานติดต่อกันขึ้นไป</b> บริษัทมีสิทธิ<b>ขอใบรับรองแพทย์</b></li>
+        <li>ลาป่วยไม่ถึง 3 วัน ไม่บังคับต้องมีใบรับรองแพทย์ แต่ควรแจ้งหัวหน้างานทราบ</li>
+        <li>หากลาป่วยเกิน 30 วัน/ปี วันที่เกินมาบริษัทมีสิทธิเลือกจ่ายหรือไม่จ่ายค่าจ้างก็ได้</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h2>การคุกคามทางเพศ</h2>
+      <ul class="plain">
+        <li>กฎหมายคุ้มครองแรงงาน<b>ห้ามนายจ้าง หัวหน้างาน ผู้ควบคุมงาน หรือผู้ตรวจงาน</b> กระทำการล่วงเกิน คุกคาม หรือก่อความเดือดร้อนรำคาญทางเพศต่อลูกจ้าง <b>ทุกเพศ</b></li>
+        <li>ผู้ฝ่าฝืนมีความผิดตามกฎหมาย ต้องรับโทษ</li>
+        <li>หากพบเจอหรือถูกกระทำ แจ้งได้ที่<b>ฝ่ายสรรหาบุคลากร (ห้องสรรหา)</b> หรือหย่อนใบร้องเรียนที่<b>กล่องรับความคิดเห็น</b> (โรงอาหาร/บันไดหนีไฟ ชั้น 4 ทิศเหนือ) กรณีผู้กระทำเป็นหัวหน้างานโดยตรง ให้แจ้งข้ามไปที่ฝ่ายบุคคลได้เลย</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ TAB: CONTACT DIRECTORY ============ -->
+  <section id="contact">
+    <div class="contact-card">
+      <div class="contact-badge" style="background:var(--navy);">🧑‍💼</div>
+      <div class="contact-body">
+        <b>ฝ่ายสรรหาบุคลากร</b>
+        <div class="loc">ห้องสรรหา (หลังป้อม รปภ.)</div>
+        <p>เรื่องรับสมัครงาน, ลาออก, สแกนหน้าไม่ได้ (เครื่องสแกนใช้งานไม่ได้)</p>
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <div class="contact-badge" style="background:var(--gold-2);">💰</div>
+      <div class="contact-body">
+        <b>ฝ่ายเจ้าหน้าที่เงินเดือน</b>
+        <div class="loc">ชั้น 3</div>
+        <p>เรื่องเงินเดือนไม่ตรง, ค่าแรงไม่ครบ</p>
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <div class="contact-badge" style="background:var(--blue);">🕒</div>
+      <div class="contact-body">
+        <b>ฝ่ายเจ้าหน้าที่ดูแลเรื่องเวลา</b>
+        <div class="loc">ชั้น 3</div>
+        <p>สแกนหน้าติดแต่เวลาไม่ขึ้น, OT โดนยกเลิก, ลาไม่ได้/คีย์ไม่ได้ในระบบ ESS<br>
+          📘 <a href="https://online.anyflip.com/npqbq/mjvl/mobile/index.html" target="_blank" rel="noopener">คู่มือการใช้งานระบบ ESS</a></p>
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <div class="contact-badge" style="background:var(--green);">🍱</div>
+      <div class="contact-body">
+        <b>ฝ่าย GA (General Affairs)</b>
+        <p>เรื่องเสื้อพนักงาน, ความเป็นอยู่/หอพัก, อาหาร และเรื่องทั่วไปอื่น ๆ</p>
+      </div>
+    </div>
+
+    <div class="contact-card">
+      <div class="contact-badge" style="background:var(--red);">📮</div>
+      <div class="contact-body">
+        <b>กล่องรับความคิดเห็น</b>
+        <p>มีความคิดเห็นหรือข้อเสนอแนะ หย่อนใบความเห็นได้ที่กล่องสีแดง 2 จุด:</p>
+        <p style="margin-top:6px;">• โรงอาหาร (1 กล่อง)<br>• บันไดหนีไฟ ชั้น 4 ทิศเหนือ</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TAB: ANNUAL ROTA ============ -->
+  <section id="rota">
+    <div class="card">
+      <h2>ตารางการทำงานประจำปี</h2>
+      <div class="rota-groupbar">
+        <button class="rota-groupbtn active" data-group="DL">พนักงานรายวัน (DL)</button>
+        <button class="rota-groupbtn" data-group="IDL">พนักงานรายเดือน (IDL)</button>
+      </div>
+      <div class="rota-teams" id="rotaTeams"></div>
+      <div class="rota-imgwrap">
+        <img id="rotaImg" src="" alt="ตารางกะ">
+      </div>
+      <p class="rota-caption">เลือกทีมของคุณด้านบนเพื่อดูตารางวันทำงาน/วันหยุดตลอดปี — แตะที่ภาพเพื่อขยาย (ปัด/ซูมตามปกติของเบราว์เซอร์)</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>มีข้อสงสัยเพิ่มเติม ดูช่องทางติดต่อได้ที่แท็บ “ติดต่อฝ่ายไหน” ด้านบน</footer>
+
+<script>
+  // ---- rota tab ----
+  const ROTA_TEAMS = {
+    DL: ['A','B','C','D','E','F','G','Z'],
+    IDL: ['A','B','C','D','Z'],
+  };
+  let rotaGroup = 'DL';
+  let rotaTeam = 'A';
+  function renderRotaTeams(){
+    const wrap = document.getElementById('rotaTeams');
+    wrap.innerHTML = '';
+    ROTA_TEAMS[rotaGroup].forEach(t=>{
+      const b = document.createElement('button');
+      b.className = 'rota-teambtn' + (t===rotaTeam ? ' active' : '');
+      b.textContent = 'ทีม ' + t;
+      b.addEventListener('click', ()=>{ rotaTeam = t; renderRotaTeams(); renderRotaImg(); });
+      wrap.appendChild(b);
+    });
+  }
+  function renderRotaImg(){
+    document.getElementById('rotaImg').src = `calendars/${rotaGroup}-${rotaTeam}.jpg`;
+  }
+  document.querySelectorAll('.rota-groupbtn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.rota-groupbtn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      rotaGroup = btn.dataset.group;
+      rotaTeam = ROTA_TEAMS[rotaGroup][0];
+      renderRotaTeams();
+      renderRotaImg();
+    });
+  });
+  renderRotaTeams();
+  renderRotaImg();
+</script>
+
+<script>
+  // ---- tabs ----
+  document.querySelectorAll('.tab').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('main section').forEach(s=>s.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+  });
+
+  // ---- calculators ----
+  function calcAllowance(){
+    const fullDays = parseFloat(document.getElementById('daysWorked').value)||0;
+    const halfDays = parseFloat(document.getElementById('halfDaysWorked').value)||0;
+    const travel = fullDays*30 + halfDays*15;
+    const stay = fullDays*30 + halfDays*15;
+    const total = travel+stay;
+    const box = document.getElementById('allowanceResult');
+    box.classList.add('show');
+    box.innerHTML = `วันเต็ม: <b>${fullDays} วัน</b> · วันครึ่งวัน: <b>${halfDays} วัน</b><br>
+      ค่าเดินทาง: ${travel.toLocaleString()} บาท<br>
+      ค่าที่พัก: ${stay.toLocaleString()} บาท<br>
+      <div class="big">รวม ${total.toLocaleString()} บาท</div>`;
+  }
+
+  function calcOT(){
+    const wage = parseFloat(document.getElementById('dailyWage').value)||0;
+    const mult = parseFloat(document.getElementById('otType').value);
+    const hours = parseFloat(document.getElementById('otHours').value)||0;
+    const hourly = wage/8;
+    const total = hourly*mult*hours;
+    const box = document.getElementById('otResult');
+    box.classList.add('show');
+    box.innerHTML = `ค่าแรงต่อชั่วโมง: ${hourly.toFixed(2)} บาท × ${mult} เท่า × ${hours} ชม.<br>
+      <div class="big">≈ ${total.toLocaleString(undefined,{maximumFractionDigits:2})} บาท</div>`;
+  }
+
+  function calcOTMonthly(){
+    const monthly = parseFloat(document.getElementById('monthlyWage').value)||0;
+    const mult = parseFloat(document.getElementById('otTypeMonthly').value);
+    const hours = parseFloat(document.getElementById('otHoursMonthly').value)||0;
+    const daily = monthly/30;
+    const hourly = daily/8;
+    const total = hourly*mult*hours;
+    const box = document.getElementById('otResultMonthly');
+    box.classList.add('show');
+    box.innerHTML = `ค่าจ้างต่อวัน: ${daily.toFixed(2)} บาท → ต่อชั่วโมง: ${hourly.toFixed(2)} บาท × ${mult} เท่า × ${hours} ชม.<br>
+      <div class="big">≈ ${total.toLocaleString(undefined,{maximumFractionDigits:2})} บาท</div>`;
+  }
+
+  // ---- checklist (resets daily via localStorage date key) ----
+  const items = [
+    {id:'c1', label:'คีย์ 8 ชั่วโมงของวันทำงานปกติ (กรณีทำงานวันหยุด)', note:'อย่าลืม — ข้อนี้พลาดบ่อยที่สุด'},
+    {id:'c2', label:'คีย์ OT ส่วนที่เกิน/ทำงานหลังเวลา', note:''},
+    {id:'c3', label:'สแกนหน้าเข้างาน', note:''},
+    {id:'c4', label:'สแกนหน้าออก-เข้า ช่วงพักครึ่งวัน', note:''},
+    {id:'c5', label:'สแกนหน้าออกงาน', note:''},
+    {id:'c6', label:'ยื่นขออนุมัติ OT ต่อหัวหน้างานแล้ว', note:'ต้องอนุมัติครบก่อนวันที่ 1 เวลา 12:00 น.'},
+  ];
+  const todayKey = new Date().toISOString().slice(0,10);
+  document.getElementById('todayDate').textContent = todayKey;
+
+  function loadChecklist(){
+    let saved = {};
+    try{
+      const raw = localStorage.getItem('checklist_'+todayKey);
+      saved = raw ? JSON.parse(raw) : {};
+    }catch(e){}
+    const wrap = document.getElementById('checkList');
+    wrap.innerHTML='';
+    items.forEach(it=>{
+      const row = document.createElement('div');
+      row.className='check-item';
+      row.innerHTML = `<input type="checkbox" id="${it.id}" ${saved[it.id]?'checked':''}>
+        <label for="${it.id}">${it.label}${it.note?`<small>${it.note}</small>`:''}</label>`;
+      wrap.appendChild(row);
+    });
+    items.forEach(it=>{
+      document.getElementById(it.id).addEventListener('change', saveChecklist);
+    });
+  }
+  function saveChecklist(){
+    const state = {};
+    items.forEach(it=> state[it.id] = document.getElementById(it.id).checked);
+    try{ localStorage.setItem('checklist_'+todayKey, JSON.stringify(state)); }catch(e){}
+  }
+  function resetChecklist(){
+    try{ localStorage.removeItem('checklist_'+todayKey); }catch(e){}
+    loadChecklist();
+  }
+  loadChecklist();
+</script>
+
+</body>
+</html>
