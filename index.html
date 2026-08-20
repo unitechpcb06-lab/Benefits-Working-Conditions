@@ -39,6 +39,12 @@
     position:relative;
     overflow:hidden;
   }
+  header .brand-logo{
+    display:block;
+    height:34px;
+    margin:0 auto 14px;
+    filter:brightness(0) invert(1);
+  }
   header .eyebrow{
     font-size:12px;
     letter-spacing:.18em;
@@ -313,26 +319,12 @@
   footer{
     text-align:center;padding:24px;color:var(--muted);font-size:13px;
   }
-
-.company-logo{
-  text-align:center;
-  margin-bottom:16px;
-}
-
-.company-logo img{
-  width:110px;
-  max-width:30vw;
-  height:auto;
-  display:inline-block;
-}
 </style>
 </head>
 <body>
 
 <header>
-    <div class="company-logo">
-    <img src="images/logo.png" alt="UNITECH PCB">
-  </div>
+  <img class="brand-logo" src="assets/unitech-logo.png" alt="Unitech">
   <div class="eyebrow">UNITECH PCB (THAILAND) CO., LTD.</div>
   <h1>สวัสดิการและการทำงาน</h1>
   <p class="sub">คู่มือพนักงาน — สิทธิ สวัสดิการ และข้อมูลที่ควรรู้</p>
@@ -345,6 +337,7 @@
     <button class="tab" data-tab="law">กฎหมายน่ารู้</button>
     <button class="tab" data-tab="contact">ติดต่อฝ่ายไหน</button>
     <button class="tab" data-tab="rota">ตารางการทำงานประจำปี</button>
+    <button class="tab" data-tab="docrequest">ขอเอกสาร</button>
   </div>
 </header>
 
@@ -356,9 +349,11 @@
       <div class="card">
         <h2>ค่าตอบแทน <span class="tag">เงิน</span></h2>
         <ul class="plain">
-          <li>รายวัน <b> ตามโครงสร้างบริษัท — ผ่านโปร (ครบ 119 วัน) แล้ว <b>บริษัทไม่มีนโยบายปรับเงินเดือนอัตโนมัติ</b> เว้นแต่จะระบุไว้ในสัญญาจ้าง</li> </b></li>
+          <li>รายวัน ตามโครงสร้างบริษัท — ผ่านโปร (ครบ 119 วัน) แล้ว <b>บริษัทไม่มีนโยบายปรับเงินเดือนอัตโนมัติ</b> เว้นแต่จะระบุไว้ในสัญญาจ้าง</li>
           <li>รายเดือน: ตามโครงสร้างบริษัท — ผ่านโปร (ครบ 119 วัน) แล้ว <b>บริษัทไม่มีนโยบายปรับเงินเดือนอัตโนมัติ</b> เว้นแต่จะระบุไว้ในสัญญาจ้าง</li>
           <li>จ่ายเงินเดือนทุกวันที่ <b>10</b> ผ่านธนาคารกรุงเทพ</li>
+          <li>พนักงานใหม่เปิดบัญชี ธ.กรุงเทพ (สาขาอ่างทอง) <b>ฟรี</b></li>
+          <li>ค่าประสบการณ์สาย PCB (ต้องมีหนังสือรับรองงานเดิม)</li>
         </ul>
       </div>
       <div class="card">
@@ -751,7 +746,7 @@
       <ul class="plain">
         <li>กฎหมายคุ้มครองแรงงาน<b>ห้ามนายจ้าง หัวหน้างาน ผู้ควบคุมงาน หรือผู้ตรวจงาน</b> กระทำการล่วงเกิน คุกคาม หรือก่อความเดือดร้อนรำคาญทางเพศต่อลูกจ้าง <b>ทุกเพศ</b></li>
         <li>ผู้ฝ่าฝืนมีความผิดตามกฎหมาย ต้องรับโทษ</li>
-        <li>หากพบเจอหรือถูกกระทำ แจ้งได้ที่<b>ฝ่ายสรรหาบุคลากร (ห้องสรรหา)</b> หรือหย่อนใบร้องเรียนที่<b>กล่องรับความคิดเห็น</b> (โรงอาหาร/บันไดหนีไฟ ชั้น 4 ทิศเหนือ) กรณีผู้กระทำเป็นหัวหน้างานโดยตรง ให้แจ้งข้ามไปที่ฝ่ายบุคคลได้เลย</li>
+        <li>หากพบเจอหรือถูกกระทำ แจ้งได้ที่<b>ฝ่ายสรรหาบุคลากร (ห้องสรรหา)</b> และ<b>ห้องฝ่ายบุคคล ชั้น 3</b> หรือหย่อนใบร้องเรียนที่<b>กล่องรับความคิดเห็น</b> (โรงอาหาร/บันไดหนีไฟ ชั้น 4 ทิศเหนือ) กรณีผู้กระทำเป็นหัวหน้างานโดยตรง ให้แจ้งข้ามไปที่ฝ่ายบุคคลได้เลย</li>
       </ul>
     </div>
   </section>
@@ -817,6 +812,33 @@
         <img id="rotaImg" src="" alt="ตารางกะ">
       </div>
       <p class="rota-caption">เลือกทีมของคุณด้านบนเพื่อดูตารางวันทำงาน/วันหยุดตลอดปี — แตะที่ภาพเพื่อขยาย (ปัด/ซูมตามปกติของเบราว์เซอร์)</p>
+    </div>
+  </section>
+
+  <!-- ============ TAB: DOCUMENT REQUEST ============ -->
+  <section id="docrequest">
+    <div class="card">
+      <h2>วิธีขอเอกสาร (สลิปเงินเดือน / หนังสือรับรองเงินเดือน / หนังสือรับรองพนักงาน)</h2>
+      <ul class="plain">
+        <li><b>1. เข้าระบบ Unitech EIP</b> แล้วกดเข้าเมนู <b>BPM</b></li>
+        <li><b>2. เลือกเมนูซ้าย</b> “TH_Certificate Application Form (ใบสมัครออกหนังสือ)”</li>
+        <li><b>3. เลือกหัวข้อนี้อีกครั้ง</b> (Certificate Application Form) เพื่อเปิดฟอร์มขอเอกสาร</li>
+        <li><b>4. กรอกแบบฟอร์ม</b> — รหัสพนักงาน, เลือกประเภทเอกสารที่ต้องการ, ภาษาและจำนวนชุด, ช่วงเวลาที่ต้องการ (รูปแบบ ปปปป-ดด), เหตุผล/หมายเหตุ แล้วกด <b>Submit</b></li>
+      </ul>
+      <div class="callout warn">
+        หลังกด Submit ระบบจะส่งให้<b>หัวหน้างานอนุมัติ</b>ก่อน จากนั้นรอรับเอกสาร<b>ภายใน 7 วันทำการ</b>
+      </div>
+    </div>
+    <div class="card">
+      <h2>ประเภทเอกสารที่ขอได้</h2>
+      <ul class="plain">
+        <li>หนังสือรับรองการทำงาน (Employment Certificate)</li>
+        <li>หนังสือรับรองการพ้นสภาพพนักงาน (Employment Separation Certificate)</li>
+        <li>หนังสือค้ำประกัน (Guarantee Letter)</li>
+        <li>หนังสือรับรองเงินเดือน (Salary Certificate)</li>
+        <li>หนังสือหัก ณ ที่จ่าย (Withholding Tax Statement)</li>
+        <li>อื่น ๆ ระบุรายละเอียดเพิ่มเติมได้ในช่องหมายเหตุ</li>
+      </ul>
     </div>
   </section>
 
