@@ -8,24 +8,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --navy:#0B2E5B;
-    --navy-2:#123A6E;
-    --blue:#0E5FA8;
-    --gold:#E8A33D;
-    --gold-2:#C9822A;
-    --bg:#F2F5F9;
+    --ink:#0A1628;
+    --navy:#0F2C52;
+    --navy-2:#16386A;
+    --signal:#E4342B;
+    --signal-dark:#B5241D;
+    --circuit:#C89B3C;
+    --circuit-2:#A87B26;
+    --paper:#F6F4EE;
     --card:#FFFFFF;
-    --line:#DCE4EE;
-    --text:#20304A;
-    --muted:#5A6B84;
-    --green:#1E8A5F;
+    --line:#E6E1D3;
+    --text:#1B2430;
+    --muted:#726B5C;
+    --green:#227A55;
     --red:#C0392B;
+    /* legacy aliases so existing rules keep working */
+    --gold:var(--circuit);
+    --gold-2:var(--circuit-2);
+    --blue:var(--navy-2);
+    --bg:var(--paper);
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
     font-family:'Sarabun',sans-serif;
-    background:var(--bg);
+    background:
+      radial-gradient(circle at 3px 3px, rgba(15,44,82,.05) 1px, transparent 0) 0 0/26px 26px,
+      var(--bg);
     color:var(--text);
     -webkit-font-smoothing:antialiased;
   }
@@ -34,13 +43,18 @@
   /* ===== Header / conveyor motif ===== */
   header{
     background:
-      linear-gradient(155deg, rgba(11,46,91,.92) 0%, rgba(18,58,110,.90) 70%),
+      linear-gradient(160deg, rgba(10,22,40,.94) 0%, rgba(15,44,82,.90) 65%),
       url('images/building.jpg') center 35%/cover no-repeat;
     color:#fff;
-    padding:38px 24px 0;
+    padding:38px 24px 8px;
     position:relative;
-    overflow:hidden;
+    border-bottom:1px solid var(--circuit);
   }
+  header .circuit-trace{
+    position:absolute;top:0;left:0;width:100%;height:100%;
+    pointer-events:none;opacity:.55;z-index:0;
+  }
+  header>*:not(.circuit-trace){position:relative;z-index:1;}
   header .brand-logo{
     display:block;
     height:34px;
@@ -59,6 +73,7 @@
     font-size:clamp(26px,5vw,40px);
     margin:0 0 6px;
     font-weight:800;
+    letter-spacing:-.02em;
   }
   header p.sub{
     text-align:center;
@@ -66,35 +81,64 @@
     margin:0 0 26px;
     font-size:15px;
   }
-  .belt{
-    display:flex;
-    justify-content:center;
-    gap:0;
-    border-top:1px solid rgba(255,255,255,.15);
-    overflow-x:auto;
-    scrollbar-width:none;
+  .langrow{
+    display:flex;justify-content:center;gap:8px;margin-bottom:16px;flex-wrap:wrap;
   }
-  .belt::-webkit-scrollbar{display:none;}
+  .lang-btn{
+    display:flex;align-items:center;gap:5px;
+    padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.08);color:#CBDCF0;
+    font-family:'Sarabun',sans-serif;font-size:12.5px;font-weight:600;
+    cursor:pointer;
+  }
+  .lang-btn .flag{font-size:14px;}
+  .lang-btn:hover{background:rgba(255,255,255,.16);}
+  .lang-btn.active{background:var(--signal);border-color:var(--signal);color:#fff;}
+
+  .toolsrow{
+    display:flex;align-items:flex-start;gap:10px;
+    max-width:560px;margin:0 auto;padding-bottom:22px;
+  }
+  .menuwrap{position:relative;flex:0 0 auto;}
+  .menu-btn{
+    height:44px;
+    display:flex;align-items:center;justify-content:center;gap:7px;
+    padding:0 16px;border-radius:12px;border:1px solid rgba(255,255,255,.25);
+    background:rgba(255,255,255,.10);color:#fff;
+    font-family:'Sarabun',sans-serif;font-size:14.5px;font-weight:700;
+    white-space:nowrap;
+    cursor:pointer;
+  }
+  .menu-btn:hover{background:rgba(255,255,255,.16);}
+  .menu-icon{font-size:16px;}
+  .menu-panel{
+    display:none;
+    position:absolute;top:calc(100% + 6px);right:0;min-width:230px;z-index:15;
+    background:#fff;border-radius:12px;box-shadow:0 10px 28px rgba(11,46,91,.3);
+    overflow:hidden;
+  }
+  .menu-panel.show{display:block;animation:pop .18s ease;}
   .tab{
-    flex:0 0 auto;
-    padding:16px 20px 14px;
-    font-size:14px;
+    display:block;width:100%;text-align:left;
+    padding:14px 18px;
+    font-family:'Sarabun',sans-serif;
+    font-size:14.5px;
     font-weight:600;
-    color:#B9CDE6;
+    color:var(--text);
     background:none;
     border:none;
+    border-bottom:1px solid var(--line);
     cursor:pointer;
-    border-bottom:3px solid transparent;
-    white-space:nowrap;
-    transition:.15s;
+    transition:.12s;
   }
-  .tab:hover{color:#fff;}
-  .tab.active{color:#fff;border-bottom-color:var(--gold);}
+  .tab:last-child{border-bottom:none;}
+  .tab:hover{background:var(--bg);}
+  .tab.active{color:var(--navy);background:var(--bg);font-weight:700;border-left:3px solid var(--gold);}
 
   /* ===== header search ===== */
-  .searchwrap{position:relative;max-width:480px;margin:0 auto 22px;}
+  .searchwrap{position:relative;flex:1 1 auto;min-width:0;}
   #searchBox{
-    width:100%;padding:12px 16px;border-radius:12px;border:none;
+    width:100%;height:44px;padding:0 16px;border-radius:12px;border:none;
     font-family:'Sarabun',sans-serif;font-size:15px;
     background:rgba(255,255,255,.14);color:#fff;
   }
@@ -131,26 +175,27 @@
   .card{
     background:var(--card);
     border:1px solid var(--line);
-    border-radius:16px;
+    border-top:3px solid var(--circuit);
+    border-radius:10px;
     padding:22px 24px;
     margin-bottom:18px;
-    box-shadow:0 1px 2px rgba(11,46,91,.04);
+    box-shadow:0 1px 2px rgba(10,22,40,.05);
   }
   .card h2{
     font-size:19px;
+    font-weight:800;
     margin:0 0 14px;
     display:flex;
     align-items:center;
     gap:10px;
+    letter-spacing:-.01em;
   }
-  .card h2 .tag{
-    font-size:11px;
-    font-weight:700;
-    background:var(--blue);
-    color:#fff;
-    padding:3px 9px;
-    border-radius:999px;
-    letter-spacing:.03em;
+  .card h2::before{
+    content:"";
+    width:9px;height:9px;
+    background:var(--signal);
+    flex:0 0 auto;
+    border-radius:2px;
   }
   ul.plain{margin:0;padding-left:20px;}
   ul.plain li{margin-bottom:8px;line-height:1.55;}
@@ -312,14 +357,15 @@
     width:100%;
     padding:13px;
     border:none;
-    border-radius:10px;
-    background:var(--navy);
+    border-radius:8px;
+    background:var(--signal);
     color:#fff;
     font-weight:700;
     font-size:15px;
+    letter-spacing:.01em;
     cursor:pointer;
   }
-  button.calc:active{background:var(--navy-2);}
+  button.calc:active{background:var(--signal-dark);}
   .result{
     margin-top:16px;
     background:var(--bg);
@@ -331,6 +377,35 @@
   }
   .result.show{display:block;}
   .result .big{font-size:26px;font-weight:800;color:var(--navy);}
+
+  /* ===== calculator hero result ===== */
+  .card.calc-card{position:relative;overflow:hidden;}
+  .calc-icon{
+    width:38px;height:38px;border-radius:10px;
+    background:var(--bg);display:flex;align-items:center;justify-content:center;
+    font-size:19px;margin-bottom:10px;
+  }
+  .result-hero{
+    display:none;
+    margin-top:18px;
+    background:linear-gradient(135deg,var(--ink) 0%,var(--navy) 100%);
+    border-radius:10px;
+    padding:22px 24px;
+    color:#fff;
+    text-align:center;
+    border-top:3px solid var(--signal);
+  }
+  .result-hero.show{display:block;animation:pop .25s ease;}
+  @keyframes pop{from{transform:scale(.97);opacity:0;}to{transform:scale(1);opacity:1;}}
+  .result-hero .rh-label{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:#B9CDE6;margin-bottom:6px;}
+  .result-hero .rh-amount{font-size:36px;font-weight:800;line-height:1.1;}
+  .result-hero .rh-amount span{font-size:16px;font-weight:600;color:#CBDCF0;margin-left:4px;}
+  .result-hero .rh-breakdown{
+    display:flex;justify-content:center;gap:22px;margin-top:14px;
+    padding-top:14px;border-top:1px solid rgba(255,255,255,.18);
+  }
+  .result-hero .rh-item{font-size:12.5px;color:#CBDCF0;}
+  .result-hero .rh-item b{display:block;font-size:15px;color:#fff;font-weight:700;margin-top:2px;}
   .disclaimer{font-size:12px;color:var(--muted);margin-top:10px;}
 
   /* ===== checklist ===== */
@@ -357,24 +432,51 @@
 <body>
 
 <header>
+  <svg class="circuit-trace" viewBox="0 0 800 320" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,40 H120 L150,70 V150 L180,180 H320" fill="none" stroke="#C89B3C" stroke-width="1.5"/>
+    <path d="M800,60 H700 L672,88 V180 L644,208 H520" fill="none" stroke="#C89B3C" stroke-width="1.5"/>
+    <path d="M0,260 H90 L118,288 H260" fill="none" stroke="#C89B3C" stroke-width="1.5"/>
+    <path d="M800,300 H680 L654,274 H560" fill="none" stroke="#C89B3C" stroke-width="1.5"/>
+    <circle cx="120" cy="40" r="3" fill="#C89B3C"/>
+    <circle cx="320" cy="180" r="3" fill="#C89B3C"/>
+    <circle cx="700" cy="60" r="3" fill="#C89B3C"/>
+    <circle cx="520" cy="208" r="3" fill="#C89B3C"/>
+    <circle cx="90" cy="260" r="3" fill="#C89B3C"/>
+    <circle cx="260" cy="288" r="3" fill="#C89B3C"/>
+    <circle cx="680" cy="300" r="3" fill="#C89B3C"/>
+    <circle cx="560" cy="274" r="3" fill="#C89B3C"/>
+  </svg>
   <img class="brand-logo" src="images/logo.png" alt="Unitech">
   <div class="eyebrow">UNITECH PCB (THAILAND) CO., LTD.</div>
-  <h1>สวัสดิการและการทำงาน</h1>
-  <p class="sub">คู่มือพนักงาน — สิทธิ สวัสดิการ และข้อมูลที่ควรรู้</p>
-  <div class="searchwrap">
-    <input type="text" id="searchBox" placeholder="ค้นหา เช่น ลาป่วย, OT, สแกนหน้า..." autocomplete="off">
-    <div class="searchresults" id="searchResults"></div>
+  <h1 data-i18n="appTitle">สวัสดิการและการทำงาน</h1>
+  <p class="sub" data-i18n="appSub">คู่มือพนักงาน — สิทธิ สวัสดิการ และข้อมูลที่ควรรู้</p>
+  <div class="langrow" id="langRow">
+    <button class="lang-btn active" data-lang="th"><span class="flag">🇹🇭</span> ไทย</button>
+    <button class="lang-btn" data-lang="en"><span class="flag">🇬🇧</span> English</button>
+    <button class="lang-btn" data-lang="zh"><span class="flag">🇹🇼</span> 中文</button>
+    <button class="lang-btn" data-lang="my"><span class="flag">🇲🇲</span> မြန်မာ</button>
   </div>
-  <div class="belt" id="tabbar">
-    <button class="tab active" data-tab="benefits">สวัสดิการ</button>
-    <button class="tab" data-tab="calc">คำนวณค่าแรง</button>
-    <button class="tab" data-tab="ot">ขั้นตอน OT</button>
-    <button class="tab" data-tab="attendance">เวลาเข้า–ออกงาน</button>
-    <button class="tab" data-tab="checklist">เช็คลิสต์วันนี้</button>
-    <button class="tab" data-tab="law">กฎหมายน่ารู้</button>
-    <button class="tab" data-tab="contact">ติดต่อฝ่ายไหน</button>
-    <button class="tab" data-tab="rota">ตารางการทำงานประจำปี</button>
-    <button class="tab" data-tab="docrequest">ขอเอกสาร</button>
+  <div class="toolsrow">
+    <div class="searchwrap">
+      <input type="text" id="searchBox" data-i18n-placeholder="searchPlaceholder" placeholder="ค้นหา เช่น ลาป่วย, OT, สแกนหน้า..." autocomplete="off">
+      <div class="searchresults" id="searchResults"></div>
+    </div>
+    <div class="menuwrap">
+      <button class="menu-btn" id="menuBtn">
+        <span class="menu-icon">☰</span><span id="menuCurrent">สวัสดิการ</span>
+      </button>
+      <div class="menu-panel" id="tabbar">
+        <button class="tab active" data-tab="benefits" data-i18n="tab_benefits">สวัสดิการ</button>
+        <button class="tab" data-tab="calc" data-i18n="tab_calc">คำนวณค่าแรง</button>
+        <button class="tab" data-tab="ot" data-i18n="tab_ot">ขั้นตอน OT</button>
+        <button class="tab" data-tab="attendance" data-i18n="tab_attendance">เวลาเข้า–ออกงาน</button>
+        <button class="tab" data-tab="checklist" data-i18n="tab_checklist">เช็คลิสต์วันนี้</button>
+        <button class="tab" data-tab="law" data-i18n="tab_law">กฎหมายน่ารู้</button>
+        <button class="tab" data-tab="contact" data-i18n="tab_contact">ติดต่อฝ่ายไหน</button>
+        <button class="tab" data-tab="rota" data-i18n="tab_rota">ตารางการทำงานประจำปี</button>
+        <button class="tab" data-tab="docrequest" data-i18n="tab_docrequest">ขอเอกสาร</button>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -384,8 +486,8 @@
   <section id="benefits" class="active">
     <div class="grid2">
       <div class="card">
-        <h2>ค่าตอบแทน <span class="tag">เงิน</span></h2>
-        <ul class="plain">
+        <h2 data-i18n="ben_comp_h2">ค่าตอบแทน</h2>
+        <ul class="plain" data-i18n-html="ben_comp_list">
           <li>รายวัน ตามโครงสร้างบริษัท — ผ่านโปร (ครบ 119 วัน) แล้ว <b>บริษัทไม่มีนโยบายปรับเงินเดือนอัตโนมัติ</b> เว้นแต่จะระบุไว้ในสัญญาจ้าง</li>
           <li>รายเดือน: ตามโครงสร้างบริษัท — ผ่านโปร (ครบ 119 วัน) แล้ว <b>บริษัทไม่มีนโยบายปรับเงินเดือนอัตโนมัติ</b> เว้นแต่จะระบุไว้ในสัญญาจ้าง</li>
           <li>จ่ายเงินเดือนทุกวันที่ <b>10</b> ผ่านธนาคารกรุงเทพ</li>
@@ -394,8 +496,8 @@
         </ul>
       </div>
       <div class="card">
-        <h2>เบี้ยเลี้ยงกะ <span class="tag">กะ</span></h2>
-        <ul class="plain">
+        <h2 data-i18n="ben_shift_h2">เบี้ยเลี้ยงกะ</h2>
+        <ul class="plain" data-i18n-html="ben_shift_list">
           <li>รายวัน กะดึก <b>80 บาท/วัน</b></li>
           <li>รายเดือน กะบ่าย/กะดึก <b>100 บาท/วัน</b></li>
           <li>ค่าเดินทาง 30 บ./วัน + ค่าที่พัก 30 บ./วัน (ไม่พักหอบริษัท)</li>
@@ -403,8 +505,8 @@
         </ul>
       </div>
       <div class="card">
-        <h2>สุขภาพและความเป็นอยู่ <span class="tag">ชีวิต</span></h2>
-        <ul class="plain">
+        <h2 data-i18n="ben_health_h2">สุขภาพและความเป็นอยู่</h2>
+        <ul class="plain" data-i18n-html="ben_health_list">
           <li>ตรวจสุขภาพก่อนเข้างาน + ประจำปี <b>ฟรี</b></li>
           <li>หอพักสวัสดิการบริษัท (ห้องละ 4 คน)</li>
           <li>อาหารกลางวันฟรี <b>1 มื้อ</b> และหากทำ OT ตั้งแต่ <b>2 ชั่วโมงขึ้นไป</b> รับอาหารเพิ่มอีก <b>1 มื้อ</b> — ต้อง<b>แจ้งชื่อล่วงหน้าให้ฝ่าย GA</b> ทราบ เพื่อคำนวณจำนวนอาหาร</li>
@@ -414,8 +516,8 @@
         </ul>
       </div>
       <div class="card">
-        <h2>วันหยุด–วันลา <span class="tag">พัก</span></h2>
-        <ul class="plain">
+        <h2 data-i18n="ben_holiday_h2">วันหยุด–วันลา</h2>
+        <ul class="plain" data-i18n-html="ben_holiday_list">
           <li>วันหยุดนักขัตฤกษ์ <b>13 วัน/ปี</b> — ดูวันที่ชัดเจนได้จาก<b>การ์ดวันหยุดที่แจกให้ในวันแรกที่เริ่มงาน</b></li>
           <li>วันลาพักร้อน <b>6 วัน/ปี</b> — เริ่มใช้ได้หลังทำงานครบ 1 ปี และใช้ได้ตลอดปีถัดไป<br>
             <small style="color:var(--muted);">ตัวอย่าง: เริ่มงาน 18/08/25 → เริ่มใช้สิทธิได้ตั้งแต่ 18/08/26 ถึง 18/08/27 ถ้าใช้ไม่หมดภายในช่วงนี้ <b>บริษัทจ่ายคืนเป็นเงินให้ทุกกรณี</b></small></li>
@@ -425,8 +527,8 @@
 
     <div class="grid2">
       <div class="card">
-        <h2>ลากิจ <span class="tag">สิทธิตามกฎหมาย</span></h2>
-        <ul class="plain">
+        <h2 data-i18n="ben_personal_h2">ลากิจ</h2>
+        <ul class="plain" data-i18n-html="ben_personal_list">
           <li>พนักงานมีสิทธิลากิจธุระอันจำเป็น ได้ <b>3 วัน/ปี โดยได้รับค่าจ้าง</b> ตามที่กฎหมายแรงงานกำหนด</li>
           <li>ใช้สำหรับธุระจำเป็นที่ต้องทำด้วยตนเอง เช่น ติดต่อราชการ ธุระครอบครัวเร่งด่วน</li>
           <li><b>วิธีใช้สิทธิ:</b> ยื่นใบลาต่อหัวหน้างานล่วงหน้าก่อนวันที่ต้องการลา ระบุวันที่และเหตุผลให้ชัดเจน รอหัวหน้างานอนุมัติก่อนจึงจะถือว่าลาถูกต้อง</li>
@@ -434,48 +536,48 @@
         </ul>
       </div>
       <div class="card">
-        <h2>ลาคลอด <span class="tag">สิทธิตามกฎหมาย · อัปเดตล่าสุด</span></h2>
-        <ul class="plain">
+        <h2 data-i18n="ben_maternity_h2">ลาคลอด</h2>
+        <ul class="plain" data-i18n-html="ben_maternity_list">
           <li>พนักงานหญิงลาคลอดได้ <b>ไม่เกิน 120 วัน</b> ต่อการตั้งครรภ์หนึ่งครั้ง (นับรวมลาฝากครรภ์และวันหยุดที่อยู่ในช่วงลา)</li>
           <li><b>บริษัทจ่ายค่าจ้างให้เต็ม</b> ในช่วง <b>60 วันแรก</b></li>
           <li>ส่วนที่เหลือ สามารถเบิกจาก<b>ประกันสังคม</b>ได้ตามสิทธิ (ประมาณ 50% ของค่าจ้างเฉลี่ย สูงสุด 90 วัน สำหรับผู้ประกันตนที่ส่งเงินสมทบครบเงื่อนไข)</li>
           <li>ต้องแจ้งการตั้งครรภ์กับหัวหน้างาน/ฝ่ายบุคคลโดยเร็วที่สุด เพื่อจัดเตรียมเอกสารลาและย้ายออกจากพื้นที่เสี่ยงตามกฎหมาย</li>
         </ul>
-        <p style="font-size:12px;color:var(--muted);margin:10px 0 0;">ปรับเพิ่มจากเดิม 98 วัน ตาม พ.ร.บ.คุ้มครองแรงงาน (ฉบับที่ 9) พ.ศ. 2568 มีผลบังคับใช้ 7 ธ.ค. 2568</p>
+        <p style="font-size:12px;color:var(--muted);margin:10px 0 0;" data-i18n="ben_maternity_note">ปรับเพิ่มจากเดิม 98 วัน ตาม พ.ร.บ.คุ้มครองแรงงาน (ฉบับที่ 9) พ.ศ. 2568 มีผลบังคับใช้ 7 ธ.ค. 2568</p>
       </div>
     </div>
 
     <div class="card">
-      <h2>ลาไปช่วยเหลือคู่สมรสที่คลอดบุตร <span class="tag">สิทธิใหม่</span></h2>
-      <ul class="plain">
+      <h2 data-i18n="ben_spouse_h2">ลาไปช่วยเหลือคู่สมรสที่คลอดบุตร</h2>
+      <ul class="plain" data-i18n-html="ben_spouse_list">
         <li>พนักงานที่มี<b>คู่สมรสคลอดบุตร</b> มีสิทธิลาได้ <b>ไม่เกิน 15 วัน</b> ต่อการคลอดหนึ่งครั้ง</li>
         <li>ต้องใช้สิทธิ<b>ภายใน 90 วัน</b> นับจากวันที่คู่สมรสคลอดบุตร (ลาต่อเนื่องหรือแบ่งลาก็ได้ภายในกรอบเวลานี้)</li>
         <li><b>ได้รับค่าจ้างเต็ม 100%</b> ตลอดระยะเวลาที่ลา</li>
         <li>ยื่นใบลาต่อหัวหน้างานพร้อมแจ้งกำหนด/วันที่คลอดของคู่สมรส</li>
       </ul>
-      <p style="font-size:12px;color:var(--muted);margin:10px 0 0;">สิทธิใหม่ตามมาตรา 41/1 ของ พ.ร.บ.คุ้มครองแรงงาน (ฉบับที่ 9) พ.ศ. 2568</p>
+      <p style="font-size:12px;color:var(--muted);margin:10px 0 0;" data-i18n="ben_spouse_note">สิทธิใหม่ตามมาตรา 41/1 ของ พ.ร.บ.คุ้มครองแรงงาน (ฉบับที่ 9) พ.ศ. 2568</p>
     </div>
 
     <div class="card">
-      <h2>เวลาทำงานตามประเภทกะ</h2>
+      <h2 data-i18n="ben_shifttime_h2">เวลาทำงานตามประเภทกะ</h2>
       <div class="grid2">
         <div>
-          <b>พนักงานรายวัน</b>
-          <ul class="plain">
+          <b data-i18n="ben_shifttime_daily_label">พนักงานรายวัน</b>
+          <ul class="plain" data-i18n-html="ben_shifttime_daily_list">
             <li>กะเช้า 08:00–17:20 น.</li>
             <li>กะดึก 20:00–05:20 น.</li>
           </ul>
         </div>
         <div>
-          <b>พนักงานรายเดือน</b>
-          <ul class="plain">
+          <b data-i18n="ben_shifttime_monthly_label">พนักงานรายเดือน</b>
+          <ul class="plain" data-i18n-html="ben_shifttime_monthly_list">
             <li>กะเช้า 08:00–16:40 น.</li>
             <li>กะบ่าย 16:00–00:40 น.</li>
             <li>กะดึก 00:00–08:40 น.</li>
           </ul>
         </div>
       </div>
-      <p style="font-size:13px;color:var(--muted);margin-top:10px;">
+      <p style="font-size:13px;color:var(--muted);margin-top:10px;" data-i18n="ben_shifttime_note">
         Office (IDL): วันหยุดหมุนเวียน (บริษัทกำหนดตาราง) ·
         Production (DL): ทำงาน 6 วัน หยุด 1 วัน (วันหยุดหมุนเวียนตามตาราง)
       </p>
@@ -484,7 +586,8 @@
 
   <!-- ============ TAB 2: CALCULATOR ============ -->
   <section id="calc">
-    <div class="card">
+    <div class="card calc-card">
+      <div class="calc-icon">🚌</div>
       <h2>คำนวณค่าเดินทาง + ที่พัก (ประมาณการ)</h2>
       <div class="row3">
         <div>
@@ -496,12 +599,13 @@
           <input type="number" id="halfDaysWorked" min="0" max="31" placeholder="เช่น 2">
         </div>
       </div>
-      <button class="calc" onclick="calcAllowance()">คำนวณ</button>
-      <div class="result" id="allowanceResult"></div>
+      <button class="calc" onclick="calcAllowance()" data-i18n="btn_calc">คำนวณ</button>
+      <div class="result-hero" id="allowanceResult"></div>
       <p class="disclaimer">นับเฉพาะ “วันทำงานปกติ” เท่านั้น — <b>ไม่นับ</b>วันหยุด/วันลาที่ไม่ได้มาทำงาน และ<b>ไม่นับเพิ่ม</b>แม้จะมาทำ OT ในวันหยุดก็ตาม วันทำงานเต็มวันได้ค่าเดินทาง+ที่พัก 30+30 บาท/วัน ส่วนวันที่ทำงานอย่างน้อย 4 ชั่วโมง (ครึ่งวัน) ได้ 15+15 บาท/วัน (สำหรับพนักงานที่ไม่ได้พักหอบริษัท)</p>
     </div>
 
-    <div class="card">
+    <div class="card calc-card">
+      <div class="calc-icon">⏱️</div>
       <h2>คำนวณค่า OT โดยประมาณ (พนักงานรายวัน)</h2>
       <div class="row3">
         <div>
@@ -519,12 +623,13 @@
       </div>
       <label>จำนวนชั่วโมง OT</label>
       <input type="number" id="otHours" placeholder="เช่น 4">
-      <button class="calc" onclick="calcOT()">คำนวณ</button>
-      <div class="result" id="otResult"></div>
+      <button class="calc" onclick="calcOT()" data-i18n="btn_calc">คำนวณ</button>
+      <div class="result-hero" id="otResult"></div>
       <p class="disclaimer">ใช้ “ค่าจ้างฐาน” เท่านั้น (<b>ไม่รวม</b>ค่าตำแหน่ง ค่าเบี้ยเลี้ยงกะ หรือค่าตอบแทนอื่น ๆ) คิดจาก ค่าจ้างฐานต่อวัน ÷ 8 ชั่วโมง × อัตราเท่า × จำนวนชั่วโมง OT เป็นตัวเลขโดยประมาณเพื่อความเข้าใจเบื้องต้นเท่านั้น ยอดจริงยึดตามการคำนวณของฝ่ายบุคคล</p>
     </div>
 
-    <div class="card">
+    <div class="card calc-card">
+      <div class="calc-icon">💰</div>
       <h2>คำนวณค่า OT โดยประมาณ (พนักงานรายเดือน)</h2>
       <div class="row3">
         <div>
@@ -542,8 +647,8 @@
       </div>
       <label>จำนวนชั่วโมง OT</label>
       <input type="number" id="otHoursMonthly" placeholder="เช่น 4">
-      <button class="calc" onclick="calcOTMonthly()">คำนวณ</button>
-      <div class="result" id="otResultMonthly"></div>
+      <button class="calc" onclick="calcOTMonthly()" data-i18n="btn_calc">คำนวณ</button>
+      <div class="result-hero" id="otResultMonthly"></div>
       <p class="disclaimer">ใช้ “เงินเดือนฐาน” เท่านั้น (<b>ไม่รวม</b>ค่าตำแหน่ง ค่าเบี้ยเลี้ยงกะ หรือค่าตอบแทนอื่น ๆ) คิดค่าจ้างต่อวัน = เงินเดือน ÷ 30, ค่าจ้างต่อชั่วโมง = ค่าจ้างต่อวัน ÷ 8 พนักงานรายเดือนได้รับเงินเดือนครอบคลุมวันหยุดอยู่แล้ว ทำงานในวันหยุดจึงได้ “ค่าตอบแทนเพิ่ม” อีก 1 เท่า ไม่ใช่ 2 เท่าแบบรายวัน ตัวเลขนี้เป็นการประมาณการเบื้องต้นเท่านั้น ยอดจริงยึดตามการคำนวณของฝ่ายบุคคล</p>
     </div>
   </section>
@@ -793,27 +898,27 @@
     <div class="contact-card">
       <div class="contact-badge" style="background:var(--navy);">🧑‍💼</div>
       <div class="contact-body">
-        <b>ฝ่ายสรรหาบุคลากร</b>
-        <div class="loc">ห้องสรรหา (หลังป้อม รปภ.)</div>
-        <p>เรื่องรับสมัครงาน, ลาออก, สแกนหน้าไม่ได้ (เครื่องสแกนใช้งานไม่ได้)</p>
+        <b data-i18n="ct_recruit_title">ฝ่ายสรรหาบุคลากร</b>
+        <div class="loc" data-i18n="ct_recruit_loc">ห้องสรรหา (หลังป้อม รปภ.)</div>
+        <p data-i18n="ct_recruit_body">เรื่องรับสมัครงาน, ลาออก, สแกนหน้าไม่ได้ (เครื่องสแกนใช้งานไม่ได้)</p>
       </div>
     </div>
 
     <div class="contact-card">
       <div class="contact-badge" style="background:var(--gold-2);">💰</div>
       <div class="contact-body">
-        <b>ฝ่ายเจ้าหน้าที่เงินเดือน</b>
-        <div class="loc">ชั้น 3</div>
-        <p>เรื่องเงินเดือนไม่ตรง, ค่าแรงไม่ครบ</p>
+        <b data-i18n="ct_payroll_title">ฝ่ายเจ้าหน้าที่เงินเดือน</b>
+        <div class="loc" data-i18n="ct_payroll_loc">ชั้น 3</div>
+        <p data-i18n="ct_payroll_body">เรื่องเงินเดือนไม่ตรง, ค่าแรงไม่ครบ</p>
       </div>
     </div>
 
     <div class="contact-card">
       <div class="contact-badge" style="background:var(--blue);">🕒</div>
       <div class="contact-body">
-        <b>ฝ่ายเจ้าหน้าที่ดูแลเรื่องเวลา</b>
-        <div class="loc">ชั้น 3</div>
-        <p>สแกนหน้าติดแต่เวลาไม่ขึ้น, OT โดนยกเลิก, ลาไม่ได้/คีย์ไม่ได้ในระบบ ESS<br>
+        <b data-i18n="ct_time_title">ฝ่ายเจ้าหน้าที่ดูแลเรื่องเวลา</b>
+        <div class="loc" data-i18n="ct_time_loc">ชั้น 3</div>
+        <p data-i18n-html="ct_time_body">สแกนหน้าติดแต่เวลาไม่ขึ้น, OT โดนยกเลิก, ลาไม่ได้/คีย์ไม่ได้ในระบบ ESS<br>
           📘 <a href="https://online.anyflip.com/npqbq/mjvl/mobile/index.html" target="_blank" rel="noopener">คู่มือการใช้งานระบบ ESS</a></p>
       </div>
     </div>
@@ -821,17 +926,17 @@
     <div class="contact-card">
       <div class="contact-badge" style="background:var(--green);">🍱</div>
       <div class="contact-body">
-        <b>ฝ่าย GA (General Affairs)</b>
-        <p>เรื่องเสื้อพนักงาน, ความเป็นอยู่/หอพัก, อาหาร และเรื่องทั่วไปอื่น ๆ</p>
+        <b data-i18n="ct_ga_title">ฝ่าย GA (General Affairs)</b>
+        <p data-i18n="ct_ga_body">เรื่องเสื้อพนักงาน, ความเป็นอยู่/หอพัก, อาหาร และเรื่องทั่วไปอื่น ๆ</p>
       </div>
     </div>
 
     <div class="contact-card">
       <div class="contact-badge" style="background:var(--red);">📮</div>
       <div class="contact-body">
-        <b>กล่องรับความคิดเห็น</b>
-        <p>มีความคิดเห็นหรือข้อเสนอแนะ หย่อนใบความเห็นได้ที่กล่องสีแดง 2 จุด:</p>
-        <p style="margin-top:6px;">• โรงอาหาร (1 กล่อง)<br>• บันไดหนีไฟ ชั้น 4 ทิศเหนือ</p>
+        <b data-i18n="ct_box_title">กล่องรับความคิดเห็น</b>
+        <p data-i18n="ct_box_body1">มีความคิดเห็นหรือข้อเสนอแนะ หย่อนใบความเห็นได้ที่กล่องสีแดง 2 จุด:</p>
+        <p style="margin-top:6px;" data-i18n-html="ct_box_body2">• โรงอาหาร (1 กล่อง)<br>• บันไดหนีไฟ ชั้น 4 ทิศเหนือ</p>
       </div>
     </div>
   </section>
@@ -841,14 +946,14 @@
     <div class="card">
       <h2>ตารางการทำงานประจำปี</h2>
       <div class="rota-groupbar">
-        <button class="rota-groupbtn active" data-group="DL">พนักงานรายวัน (DL)</button>
-        <button class="rota-groupbtn" data-group="IDL">พนักงานรายเดือน (IDL)</button>
+        <button class="rota-groupbtn active" data-group="DL" data-i18n="rota_dl">พนักงานรายวัน (DL)</button>
+        <button class="rota-groupbtn" data-group="IDL" data-i18n="rota_idl">พนักงานรายเดือน (IDL)</button>
       </div>
       <div class="rota-teams" id="rotaTeams"></div>
       <div class="rota-imgwrap">
         <img id="rotaImg" src="" alt="ตารางกะ">
       </div>
-      <p class="rota-caption">เลือกทีมของคุณด้านบนเพื่อดูตารางวันทำงาน/วันหยุดตลอดปี — แตะที่ภาพเพื่อขยาย (ปัด/ซูมตามปกติของเบราว์เซอร์)</p>
+      <p class="rota-caption" data-i18n="rota_caption">เลือกทีมของคุณด้านบนเพื่อดูตารางวันทำงาน/วันหยุดตลอดปี — แตะที่ภาพเพื่อขยาย (ปัด/ซูมตามปกติของเบราว์เซอร์)</p>
     </div>
   </section>
 
@@ -864,6 +969,9 @@
       </ul>
       <div class="callout warn">
         หลังกด Submit ระบบจะส่งให้<b>หัวหน้างานอนุมัติ</b>ก่อน จากนั้นรอรับเอกสาร<b>ภายใน 7 วันทำการ</b>
+      </div>
+      <div class="callout ok" style="margin-top:12px;">
+        <b>พนักงานรายวัน (DL) ไม่มีรหัสเข้าระบบ BPM เป็นของตัวเอง</b> — ให้<b>แจ้งหัวหน้างานเป็นผู้ Submit ให้แทน</b> โดยหัวหน้างานใช้<b>รหัสของตัวเอง</b>ในการเข้าระบบ แต่กรอก<b>รหัสพนักงาน (Employee ID) ของผู้ที่ขอเอกสารจริง</b>ลงในแบบฟอร์ม
       </div>
     </div>
     <div class="card">
@@ -881,7 +989,339 @@
 
 </main>
 
-<footer>มีข้อสงสัยเพิ่มเติม ดูช่องทางติดต่อได้ที่แท็บ “ติดต่อฝ่ายไหน” ด้านบน</footer>
+<footer data-i18n="footer">มีข้อสงสัยเพิ่มเติม ดูช่องทางติดต่อได้ที่แท็บ “ติดต่อฝ่ายไหน” ด้านบน</footer>
+
+<script>
+  // ---- i18n ----
+  const I18N = {
+    th: {
+      appTitle:"สวัสดิการและการทำงาน",
+      appSub:"คู่มือพนักงาน — สิทธิ สวัสดิการ และข้อมูลที่ควรรู้",
+      searchPlaceholder:"ค้นหา เช่น ลาป่วย, OT, สแกนหน้า...",
+      tab_benefits:"สวัสดิการ", tab_calc:"คำนวณค่าแรง", tab_ot:"ขั้นตอน OT",
+      tab_attendance:"เวลาเข้า–ออกงาน", tab_checklist:"เช็คลิสต์วันนี้", tab_law:"กฎหมายน่ารู้",
+      tab_contact:"ติดต่อฝ่ายไหน", tab_rota:"ตารางการทำงานประจำปี", tab_docrequest:"ขอเอกสาร",
+      footer:"มีข้อสงสัยเพิ่มเติม ดูช่องทางติดต่อได้ที่แท็บ “ติดต่อฝ่ายไหน” ด้านบน",
+      btn_calc:"คำนวณ",
+      rota_dl:"พนักงานรายวัน (DL)", rota_idl:"พนักงานรายเดือน (IDL)",
+      rota_caption:"เลือกทีมของคุณด้านบนเพื่อดูตารางวันทำงาน/วันหยุดตลอดปี — แตะที่ภาพเพื่อขยาย (ปัด/ซูมตามปกติของเบราว์เซอร์)",
+      team_prefix:"ทีม",
+      menu_word:"เมนู",
+      ben_comp_h2:"ค่าตอบแทน",
+      ben_comp_list:`<li>รายวัน ตามโครงสร้างบริษัท — ผ่านโปร (ครบ 119 วัน) แล้ว <b>บริษัทไม่มีนโยบายปรับเงินเดือนอัตโนมัติ</b> เว้นแต่จะระบุไว้ในสัญญาจ้าง</li>
+        <li>รายเดือน: ตามโครงสร้างบริษัท — ผ่านโปร (ครบ 119 วัน) แล้ว <b>บริษัทไม่มีนโยบายปรับเงินเดือนอัตโนมัติ</b> เว้นแต่จะระบุไว้ในสัญญาจ้าง</li>
+        <li>จ่ายเงินเดือนทุกวันที่ <b>10</b> ผ่านธนาคารกรุงเทพ</li>
+        <li>พนักงานใหม่เปิดบัญชี ธ.กรุงเทพ (สาขาอ่างทอง) <b>ฟรี</b></li>
+        <li>ค่าประสบการณ์สาย PCB (ต้องมีหนังสือรับรองงานเดิม)</li>`,
+      ben_shift_h2:"เบี้ยเลี้ยงกะ",
+      ben_shift_list:`<li>รายวัน กะดึก <b>80 บาท/วัน</b></li>
+        <li>รายเดือน กะบ่าย/กะดึก <b>100 บาท/วัน</b></li>
+        <li>ค่าเดินทาง 30 บ./วัน + ค่าที่พัก 30 บ./วัน (ไม่พักหอบริษัท)</li>
+        <li>จ่ายตาม “วันที่มาทำงานจริง” เท่านั้น ไม่ใช่วันทั้งเดือน</li>`,
+      ben_health_h2:"สุขภาพและความเป็นอยู่",
+      ben_health_list:`<li>ตรวจสุขภาพก่อนเข้างาน + ประจำปี <b>ฟรี</b></li>
+        <li>หอพักสวัสดิการบริษัท (ห้องละ 4 คน)</li>
+        <li>อาหารกลางวันฟรี <b>1 มื้อ</b> และหากทำ OT ตั้งแต่ <b>2 ชั่วโมงขึ้นไป</b> รับอาหารเพิ่มอีก <b>1 มื้อ</b> — ต้อง<b>แจ้งชื่อล่วงหน้าให้ฝ่าย GA</b> ทราบ เพื่อคำนวณจำนวนอาหาร</li>
+        <li>ชุดยูนิฟอร์ม เมื่อทำงานครบ 1 เดือน รับได้ <b>2 ตัว</b> ที่<b>ชั้น 4</b> ทุกวัน<b>พุธ 09:00–09:30 น.</b><br>
+          <small style="color:var(--muted);">บริษัทไม่ได้เข้มงวดเรื่องการแต่งกาย ไม่จำเป็นต้องใส่เสื้อบริษัทก็ได้ แต่งกายสุภาพเป็นพอ — แต่ต้อง<b>ติดบัตรพนักงานทุกครั้ง</b>ที่เข้ามาในโรงงาน</small></li>
+        <li>ประกันสังคมตามที่กฎหมายกำหนด</li>`,
+      ben_holiday_h2:"วันหยุด–วันลา",
+      ben_holiday_list:`<li>วันหยุดนักขัตฤกษ์ <b>13 วัน/ปี</b> — ดูวันที่ชัดเจนได้จาก<b>การ์ดวันหยุดที่แจกให้ในวันแรกที่เริ่มงาน</b></li>
+        <li>วันลาพักร้อน <b>6 วัน/ปี</b> — เริ่มใช้ได้หลังทำงานครบ 1 ปี และใช้ได้ตลอดปีถัดไป<br>
+          <small style="color:var(--muted);">ตัวอย่าง: เริ่มงาน 18/08/25 → เริ่มใช้สิทธิได้ตั้งแต่ 18/08/26 ถึง 18/08/27 ถ้าใช้ไม่หมดภายในช่วงนี้ <b>บริษัทจ่ายคืนเป็นเงินให้ทุกกรณี</b></small></li>`,
+      ben_personal_h2:"ลากิจ",
+      ben_personal_list:`<li>พนักงานมีสิทธิลากิจธุระอันจำเป็น ได้ <b>3 วัน/ปี โดยได้รับค่าจ้าง</b> ตามที่กฎหมายแรงงานกำหนด</li>
+        <li>ใช้สำหรับธุระจำเป็นที่ต้องทำด้วยตนเอง เช่น ติดต่อราชการ ธุระครอบครัวเร่งด่วน</li>
+        <li><b>วิธีใช้สิทธิ:</b> ยื่นใบลาต่อหัวหน้างานล่วงหน้าก่อนวันที่ต้องการลา ระบุวันที่และเหตุผลให้ชัดเจน รอหัวหน้างานอนุมัติก่อนจึงจะถือว่าลาถูกต้อง</li>
+        <li>กรณีฉุกเฉินที่แจ้งล่วงหน้าไม่ได้ ให้รีบแจ้งหัวหน้างานโดยเร็วที่สุด แล้วยื่นใบลาย้อนหลังทันทีที่กลับมาทำงาน</li>`,
+      ben_maternity_h2:"ลาคลอด",
+      ben_maternity_list:`<li>พนักงานหญิงลาคลอดได้ <b>ไม่เกิน 120 วัน</b> ต่อการตั้งครรภ์หนึ่งครั้ง (นับรวมลาฝากครรภ์และวันหยุดที่อยู่ในช่วงลา)</li>
+        <li><b>บริษัทจ่ายค่าจ้างให้เต็ม</b> ในช่วง <b>60 วันแรก</b></li>
+        <li>ส่วนที่เหลือ สามารถเบิกจาก<b>ประกันสังคม</b>ได้ตามสิทธิ (ประมาณ 50% ของค่าจ้างเฉลี่ย สูงสุด 90 วัน สำหรับผู้ประกันตนที่ส่งเงินสมทบครบเงื่อนไข)</li>
+        <li>ต้องแจ้งการตั้งครรภ์กับหัวหน้างาน/ฝ่ายบุคคลโดยเร็วที่สุด เพื่อจัดเตรียมเอกสารลาและย้ายออกจากพื้นที่เสี่ยงตามกฎหมาย</li>`,
+      ben_maternity_note:"ปรับเพิ่มจากเดิม 98 วัน ตาม พ.ร.บ.คุ้มครองแรงงาน (ฉบับที่ 9) พ.ศ. 2568 มีผลบังคับใช้ 7 ธ.ค. 2568",
+      ben_spouse_h2:"ลาไปช่วยเหลือคู่สมรสที่คลอดบุตร",
+      ben_spouse_list:`<li>พนักงานที่มี<b>คู่สมรสคลอดบุตร</b> มีสิทธิลาได้ <b>ไม่เกิน 15 วัน</b> ต่อการคลอดหนึ่งครั้ง</li>
+        <li>ต้องใช้สิทธิ<b>ภายใน 90 วัน</b> นับจากวันที่คู่สมรสคลอดบุตร (ลาต่อเนื่องหรือแบ่งลาก็ได้ภายในกรอบเวลานี้)</li>
+        <li><b>ได้รับค่าจ้างเต็ม 100%</b> ตลอดระยะเวลาที่ลา</li>
+        <li>ยื่นใบลาต่อหัวหน้างานพร้อมแจ้งกำหนด/วันที่คลอดของคู่สมรส</li>`,
+      ben_spouse_note:"สิทธิใหม่ตามมาตรา 41/1 ของ พ.ร.บ.คุ้มครองแรงงาน (ฉบับที่ 9) พ.ศ. 2568",
+      ben_shifttime_h2:"เวลาทำงานตามประเภทกะ",
+      ben_shifttime_daily_label:"พนักงานรายวัน",
+      ben_shifttime_daily_list:`<li>กะเช้า 08:00–17:20 น.</li><li>กะดึก 20:00–05:20 น.</li>`,
+      ben_shifttime_monthly_label:"พนักงานรายเดือน",
+      ben_shifttime_monthly_list:`<li>กะเช้า 08:00–16:40 น.</li><li>กะบ่าย 16:00–00:40 น.</li><li>กะดึก 00:00–08:40 น.</li>`,
+      ben_shifttime_note:"Office (IDL): วันหยุดหมุนเวียน (บริษัทกำหนดตาราง) · Production (DL): ทำงาน 6 วัน หยุด 1 วัน (วันหยุดหมุนเวียนตามตาราง)",
+      ct_recruit_title:"ฝ่ายสรรหาบุคลากร",
+      ct_recruit_loc:"ห้องสรรหา (หลังป้อม รปภ.)",
+      ct_recruit_body:"เรื่องรับสมัครงาน, ลาออก, สแกนหน้าไม่ได้ (เครื่องสแกนใช้งานไม่ได้)",
+      ct_payroll_title:"ฝ่ายเจ้าหน้าที่เงินเดือน",
+      ct_payroll_loc:"ชั้น 3",
+      ct_payroll_body:"เรื่องเงินเดือนไม่ตรง, ค่าแรงไม่ครบ",
+      ct_time_title:"ฝ่ายเจ้าหน้าที่ดูแลเรื่องเวลา",
+      ct_time_loc:"ชั้น 3",
+      ct_time_body:`สแกนหน้าติดแต่เวลาไม่ขึ้น, OT โดนยกเลิก, ลาไม่ได้/คีย์ไม่ได้ในระบบ ESS<br>
+        📘 <a href="https://online.anyflip.com/npqbq/mjvl/mobile/index.html" target="_blank" rel="noopener">คู่มือการใช้งานระบบ ESS</a>`,
+      ct_ga_title:"ฝ่าย GA (General Affairs)",
+      ct_ga_body:"เรื่องเสื้อพนักงาน, ความเป็นอยู่/หอพัก, อาหาร และเรื่องทั่วไปอื่น ๆ",
+      ct_box_title:"กล่องรับความคิดเห็น",
+      ct_box_body1:"มีความคิดเห็นหรือข้อเสนอแนะ หย่อนใบความเห็นได้ที่กล่องสีแดง 2 จุด:",
+      ct_box_body2:"• โรงอาหาร (1 กล่อง)<br>• บันไดหนีไฟ ชั้น 4 ทิศเหนือ",
+    },
+    en: {
+      appTitle:"Benefits & Working Conditions",
+      appSub:"Employee guide — rights, benefits, and what you need to know",
+      searchPlaceholder:"Search, e.g. sick leave, OT, face scan...",
+      tab_benefits:"Benefits", tab_calc:"Wage Calculator", tab_ot:"OT Process",
+      tab_attendance:"Clock In/Out Times", tab_checklist:"Today's Checklist", tab_law:"Good to Know",
+      tab_contact:"Who to Contact", tab_rota:"Annual Work Schedule", tab_docrequest:"Request Documents",
+      footer:"Have more questions? See the “Who to Contact” tab above.",
+      btn_calc:"Calculate",
+      rota_dl:"Daily-wage Staff (DL)", rota_idl:"Monthly Staff (IDL)",
+      rota_caption:"Select your team above to see your work/day-off schedule for the year — tap the image to zoom (standard browser pinch/zoom).",
+      team_prefix:"Team",
+      menu_word:"Menu",
+      ben_comp_h2:"Compensation",
+      ben_comp_list:`<li>Daily wage: per company structure — after passing probation (119 days), <b>the company has no policy of automatic pay raises</b>, unless stated in the employment contract</li>
+        <li>Monthly wage: per company structure — after passing probation (119 days), <b>the company has no policy of automatic pay raises</b>, unless stated in the employment contract</li>
+        <li>Salary paid on the <b>10th</b> of every month via Bangkok Bank</li>
+        <li>New employees get a <b>free</b> Bangkok Bank account (Ang Thong branch)</li>
+        <li>PCB-industry experience pay (requires a work certificate from your previous employer)</li>`,
+      ben_shift_h2:"Shift Allowance",
+      ben_shift_list:`<li>Daily staff, night shift: <b>80 THB/day</b></li>
+        <li>Monthly staff, afternoon/night shift: <b>100 THB/day</b></li>
+        <li>Travel allowance 30 THB/day + housing allowance 30 THB/day (for staff not staying in company dorms)</li>
+        <li>Paid only for “actual days worked,” not the whole month</li>`,
+      ben_health_h2:"Health & Wellbeing",
+      ben_health_list:`<li>Free pre-employment and annual health checks</li>
+        <li>Company dormitory (4 people per room)</li>
+        <li>Free lunch (<b>1 meal</b>); if you do <b>2+ hours of OT</b>, you get <b>1 additional meal</b> — must <b>report your name to GA in advance</b> so meals are counted correctly</li>
+        <li>Uniform: after completing 1 month, receive <b>2 pieces</b>, pickup on <b>floor 4</b> every <b>Wednesday 09:00–09:30</b><br>
+          <small style="color:var(--muted);">Dress code is not strict — a company shirt isn't required, just dress neatly — but you must always <b>wear your employee ID badge</b> inside the factory</small></li>
+        <li>Social security as required by law</li>`,
+      ben_holiday_h2:"Holidays & Leave",
+      ben_holiday_list:`<li><b>13 public holidays/year</b> — see exact dates on <b>the holiday card given on your first day</b></li>
+        <li><b>6 vacation days/year</b> — usable starting 1 year after hire date, through the following year<br>
+          <small style="color:var(--muted);">Example: hired 18/08/25 → usable 18/08/26 through 18/08/27; if unused within this window, <b>the company always pays it out in cash</b></small></li>`,
+      ben_personal_h2:"Personal Leave",
+      ben_personal_list:`<li>Employees are entitled to <b>3 paid personal-leave days/year</b> as required by labor law</li>
+        <li>Used for necessary personal matters requiring your presence, e.g. government paperwork, urgent family matters</li>
+        <li><b>How to use it:</b> submit a leave form to your supervisor in advance, clearly stating the date and reason; supervisor approval is required for the leave to be valid</li>
+        <li>For emergencies where advance notice isn't possible, notify your supervisor as soon as possible and submit the leave form retroactively as soon as you return to work</li>`,
+      ben_maternity_h2:"Maternity Leave",
+      ben_maternity_list:`<li>Female employees may take <b>up to 120 days</b> of maternity leave per pregnancy (includes antenatal leave and any holidays within the leave period)</li>
+        <li><b>The company pays full wages</b> for the <b>first 60 days</b></li>
+        <li>The remainder can be claimed from <b>Social Security</b> per your entitlement (approx. 50% of average wage, up to 90 days, for insured members who meet the contribution requirement)</li>
+        <li>You must notify your supervisor/HR of your pregnancy as soon as possible, so leave paperwork can be prepared and you can be moved from risk areas as required by law</li>`,
+      ben_maternity_note:"Increased from the previous 98 days under the Labor Protection Act (No. 9) B.E. 2568, effective 7 Dec 2025",
+      ben_spouse_h2:"Leave to Support a Spouse After Childbirth",
+      ben_spouse_list:`<li>An employee whose <b>spouse gives birth</b> is entitled to <b>up to 15 days</b> of leave per birth</li>
+        <li>Must be used <b>within 90 days</b> of the birth (can be taken continuously or split within this window)</li>
+        <li><b>Paid at 100% of wages</b> for the entire leave</li>
+        <li>Submit a leave form to your supervisor, stating your spouse's due date/date of birth</li>`,
+      ben_spouse_note:"New entitlement under Section 41/1 of the Labor Protection Act (No. 9) B.E. 2568",
+      ben_shifttime_h2:"Working Hours by Shift Type",
+      ben_shifttime_daily_label:"Daily-wage Staff",
+      ben_shifttime_daily_list:`<li>Morning shift 08:00–17:20</li><li>Night shift 20:00–05:20</li>`,
+      ben_shifttime_monthly_label:"Monthly Staff",
+      ben_shifttime_monthly_list:`<li>Morning shift 08:00–16:40</li><li>Afternoon shift 16:00–00:40</li><li>Night shift 00:00–08:40</li>`,
+      ben_shifttime_note:"Office (IDL): rotating days off (schedule set by the company) · Production (DL): 6 days on, 1 day off (rotating schedule)",
+      ct_recruit_title:"Recruitment Department",
+      ct_recruit_loc:"Recruitment Room (behind the security post)",
+      ct_recruit_body:"For: hiring, resignation, face scan not working (scanner malfunction)",
+      ct_payroll_title:"Payroll Department",
+      ct_payroll_loc:"Floor 3",
+      ct_payroll_body:"For: incorrect salary, incomplete wages",
+      ct_time_title:"Time & Attendance Department",
+      ct_time_loc:"Floor 3",
+      ct_time_body:`Face scan recorded but time not showing, OT getting cancelled, unable to submit leave/enter data in the ESS system<br>
+        📘 <a href="https://online.anyflip.com/npqbq/mjvl/mobile/index.html" target="_blank" rel="noopener">ESS System User Manual</a>`,
+      ct_ga_title:"GA Department (General Affairs)",
+      ct_ga_body:"For: uniforms, living conditions/dormitory, food, and other general matters",
+      ct_box_title:"Suggestion Box",
+      ct_box_body1:"Have feedback or a suggestion? Drop a note in one of the 2 red boxes:",
+      ct_box_body2:"• Canteen (1 box)<br>• Floor 4 fire escape stairwell, north side",
+    },
+    zh: {
+      appTitle:"福利與工作規範",
+      appSub:"員工手冊 — 權益、福利與應知資訊",
+      searchPlaceholder:"搜尋，例如：病假、加班、人臉打卡...",
+      tab_benefits:"福利", tab_calc:"薪資試算", tab_ot:"加班流程",
+      tab_attendance:"上下班時間", tab_checklist:"今日檢查清單", tab_law:"應知法律常識",
+      tab_contact:"聯絡窗口", tab_rota:"年度工作行事曆", tab_docrequest:"申請文件",
+      footer:"還有疑問嗎？請至上方「聯絡窗口」分頁查看聯絡方式。",
+      btn_calc:"計算",
+      rota_dl:"日薪員工 (DL)", rota_idl:"月薪員工 (IDL)",
+      rota_caption:"請於上方選擇您的班別，即可查看全年出勤/休假表 — 點選圖片可放大（依瀏覽器一般縮放方式）。",
+      team_prefix:"組別",
+      menu_word:"選單",
+      ben_comp_h2:"薪資",
+      ben_comp_list:`<li>日薪：依公司薪資結構 — 試用期滿（119天）後，<b>除非勞動合約另有約定，公司無自動調薪政策</b></li>
+        <li>月薪：依公司薪資結構 — 試用期滿（119天）後，<b>除非勞動合約另有約定，公司無自動調薪政策</b></li>
+        <li>每月<b>10日</b>透過盤谷銀行發放薪資</li>
+        <li>新進員工可<b>免費</b>開立盤谷銀行帳戶（Ang Thong 安通分行）</li>
+        <li>PCB產業經驗津貼（須提供原公司在職證明）</li>`,
+      ben_shift_h2:"輪班津貼",
+      ben_shift_list:`<li>日薪員工夜班：<b>80泰銖/天</b></li>
+        <li>月薪員工中班/夜班：<b>100泰銖/天</b></li>
+        <li>交通津貼30泰銖/天 + 住宿津貼30泰銖/天（未住公司宿舍者）</li>
+        <li>僅依「實際出勤天數」發放，非整月計算</li>`,
+      ben_health_h2:"健康與生活",
+      ben_health_list:`<li>入職前及每年健康檢查 <b>免費</b></li>
+        <li>公司宿舍（每房4人）</li>
+        <li>免費午餐<b>1餐</b>；加班<b>2小時以上</b>可再獲得<b>1餐</b> — 須<b>提前向GA（總務）報備姓名</b>以便計算餐數</li>
+        <li>制服：滿1個月後可領取<b>2套</b>，於<b>4樓</b>每週<b>三09:00–09:30</b>領取<br>
+          <small style="color:var(--muted);">公司對服裝要求不嚴格，不強制穿公司制服，端莊即可 — 但進入廠區<b>必須隨時配戴員工證</b></small></li>
+        <li>依法提供社會保險</li>`,
+      ben_holiday_h2:"假期與請假",
+      ben_holiday_list:`<li>每年<b>13天</b>國定假日 — 確切日期請見<b>到職首日發放的假日卡</b></li>
+        <li>每年<b>6天</b>特休 — 到職滿1年後開始可用，可用至隔年<br>
+          <small style="color:var(--muted);">範例：到職日18/08/25 → 可自18/08/26用至18/08/27；未休完<b>一律折現</b></small></li>`,
+      ben_personal_h2:"事假",
+      ben_personal_list:`<li>依勞動法規定，員工每年享有<b>3天有薪事假</b></li>
+        <li>適用於須本人親自處理的必要事務，如洽公、家庭緊急事務</li>
+        <li><b>使用方式：</b>須事先向主管提交請假單，清楚寫明日期與事由，經主管核准後方為有效請假</li>
+        <li>若屬無法事先告知的緊急狀況，應盡速通知主管，並於返回工作崗位後立即補交請假單</li>`,
+      ben_maternity_h2:"產假",
+      ben_maternity_list:`<li>女性員工每次懷孕可請產假<b>最多120天</b>（含產前檢查假及請假期間內的假日）</li>
+        <li><b>公司於前60天照給全薪</b></li>
+        <li>剩餘天數可依規定向<b>社會保險</b>申請給付（約為平均薪資50%，最多90天，須符合投保條件的被保險人）</li>
+        <li>須盡速將懷孕情況告知主管/人資，以便準備請假文件並依法調離高風險區域</li>`,
+      ben_maternity_note:"依《勞動保護法》（第9號修正案）佛曆2568年（西元2025年）規定，自2025年12月7日起生效，天數由原本98天調增",
+      ben_spouse_h2:"配偶生產陪產假",
+      ben_spouse_list:`<li><b>配偶生產</b>的員工，每次生產可請假<b>最多15天</b></li>
+        <li>須於配偶生產後<b>90天內</b>使用完畢（可連續請假或於此期間內分次使用）</li>
+        <li>請假期間<b>支薪100%</b></li>
+        <li>須向主管提交請假單，並告知配偶預產期/生產日期</li>`,
+      ben_spouse_note:"依《勞動保護法》（第9號修正案）佛曆2568年 第41/1條 新增之權益",
+      ben_shifttime_h2:"各班別工作時間",
+      ben_shifttime_daily_label:"日薪員工",
+      ben_shifttime_daily_list:`<li>早班 08:00–17:20</li><li>夜班 20:00–05:20</li>`,
+      ben_shifttime_monthly_label:"月薪員工",
+      ben_shifttime_monthly_list:`<li>早班 08:00–16:40</li><li>中班 16:00–00:40</li><li>夜班 00:00–08:40</li>`,
+      ben_shifttime_note:"Office（IDL）：輪休（公司排班）· Production（DL）：做6休1（輪休排班）",
+      ct_recruit_title:"招募人事部",
+      ct_recruit_loc:"招募室（警衛崗亭後方）",
+      ct_recruit_body:"事項：應徵、離職、人臉打卡機故障",
+      ct_payroll_title:"薪資部",
+      ct_payroll_loc:"3樓",
+      ct_payroll_body:"事項：薪資有誤、工資不足",
+      ct_time_title:"出勤管理部",
+      ct_time_loc:"3樓",
+      ct_time_body:`人臉打卡有紀錄但時間未顯示、加班遭取消、無法在ESS系統請假/登打資料<br>
+        📘 <a href="https://online.anyflip.com/npqbq/mjvl/mobile/index.html" target="_blank" rel="noopener">ESS系統使用手冊</a>`,
+      ct_ga_title:"總務部 (GA)",
+      ct_ga_body:"事項：制服、生活起居/宿舍、餐食及其他一般事務",
+      ct_box_title:"意見箱",
+      ct_box_body1:"若有任何意見或建議，可投遞至2處紅色意見箱：",
+      ct_box_body2:"• 餐廳（1個）<br>• 4樓北側逃生梯",
+    },
+    my: {
+      appTitle:"အကျိုးခံစားခွင့်နှင့် အလုပ်လုပ်ငန်းအခြေအနေများ",
+      appSub:"ဝန်ထမ်းလက်စွဲ — အခွင့်အရေး၊ အကျိုးခံစားခွင့်နှင့် သိထားသင့်သည့်အချက်အလက်များ",
+      searchPlaceholder:"ရှာဖွေရန် — ဥပမာ နာမကျန်းလပ်၊ OT၊ မျက်နှာစကင်...",
+      tab_benefits:"အကျိုးခံစားခွင့်", tab_calc:"လုပ်ခတွက်ချက်ရန်", tab_ot:"OT လုပ်ငန်းစဉ်",
+      tab_attendance:"အလုပ်ဝင်/ထွက်ချိန်", tab_checklist:"ယနေ့ စစ်ဆေးရန်စာရင်း", tab_law:"သိထားသင့်သောဥပဒေ",
+      tab_contact:"မည်သူ့ကိုဆက်သွယ်ရမည်", tab_rota:"နှစ်ချုပ်အလုပ်ချိန်ဇယား", tab_docrequest:"စာရွက်စာတမ်းတောင်းခံရန်",
+      footer:"ထပ်မံမေးမြန်းလိုပါက အထက်ပါ “မည်သူ့ကိုဆက်သွယ်ရမည်” တက်ဘ်တွင် ကြည့်ပါ။",
+      btn_calc:"တွက်ချက်ရန်",
+      rota_dl:"နေ့စားဝန်ထမ်း (DL)", rota_idl:"လစဉ်ဝန်ထမ်း (IDL)",
+      rota_caption:"နှစ်ချုပ် အလုပ်/ပိတ်ရက်ဇယားကြည့်ရန် အထက်တွင် သင့်အဖွဲ့ကို ရွေးပါ — ပုံကိုချဲ့ကြည့်ရန် နှိပ်ပါ (browser ၏ ပုံမှန် pinch/zoom သုံးနိုင်သည်)",
+      team_prefix:"အဖွဲ့",
+      menu_word:"မီနူး",
+      ben_comp_h2:"လုပ်ခလစာ",
+      ben_comp_list:`<li>နေ့စား — ကုမ္ပဏီ၏ လစာဖွဲ့စည်းပုံအတိုင်း — စမ်းသပ်ကာလ (၁၁၉ ရက်) ကျော်လွန်ပြီးနောက် <b>အလုပ်စာချုပ်တွင် သီးခြားဖော်ပြထားခြင်းမရှိလျှင် ကုမ္ပဏီတွင် အလိုအလျောက် လစာတိုးမြှင့်ပေးသည့် မူဝါဒမရှိပါ</b></li>
+        <li>လစဉ် — ကုမ္ပဏီ၏ လစာဖွဲ့စည်းပုံအတိုင်း — စမ်းသပ်ကာလ (၁၁၉ ရက်) ကျော်လွန်ပြီးနောက် <b>အလုပ်စာချုပ်တွင် သီးခြားဖော်ပြထားခြင်းမရှိလျှင် ကုမ္ပဏီတွင် အလိုအလျောက် လစာတိုးမြှင့်ပေးသည့် မူဝါဒမရှိပါ</b></li>
+        <li>Bangkok Bank မှတစ်ဆင့် လစဉ် <b>၁၀ ရက်နေ့</b>တိုင်း လစာထုတ်ပေးသည်</li>
+        <li>ဝန်ထမ်းအသစ်များအတွက် Bangkok Bank အကောင့် (Ang Thong ဘဏ်ခွဲ) <b>အခမဲ့</b>ဖွင့်ပေးသည်</li>
+        <li>PCB လုပ်ငန်းအတွေ့အကြုံဆိုင်ရာ ကြေးငွေ (ယခင်အလုပ်ရှင်၏ အလုပ်လုပ်ကြောင်း အထောက်အထားလိုအပ်သည်)</li>`,
+      ben_shift_h2:"ဆိုင်းကြေး",
+      ben_shift_list:`<li>နေ့စားဝန်ထမ်း ညဆိုင်း — <b>၈၀ ဘတ်/ရက်</b></li>
+        <li>လစဉ်ဝန်ထမ်း နေ့လယ်ဆိုင်း/ညဆိုင်း — <b>၁၀၀ ဘတ်/ရက်</b></li>
+        <li>ခရီးစရိတ် ၃၀ ဘတ်/ရက် + နေထိုင်ခစရိတ် ၃၀ ဘတ်/ရက် (ကုမ္ပဏီအိပ်ဆောင်တွင် မနေသူများအတွက်)</li>
+        <li>“အမှန်တကယ် အလုပ်ရောက်သည့်ရက်” အတိုင်းသာ ပေးချေမည်၊ တစ်လလုံးအတွက် မဟုတ်ပါ</li>`,
+      ben_health_h2:"ကျန်းမာရေးနှင့် နေထိုင်မှု",
+      ben_health_list:`<li>အလုပ်မဝင်မီနှင့် နှစ်စဉ် ကျန်းမာရေးစစ်ဆေးမှု <b>အခမဲ့</b></li>
+        <li>ကုမ္ပဏီအိပ်ဆောင် (တစ်ခန်းလျှင် ၄ ဦး)</li>
+        <li>နေ့လည်စာ အခမဲ့ <b>၁ ကြိမ်</b>၊ OT <b>၂ နာရီနှင့်အထက်</b> လုပ်ပါက နောက်ထပ် <b>၁ ကြိမ်</b> ရရှိမည် — <b>GA ထံ အမည်ကို ကြိုတင်အကြောင်းကြားရမည်</b></li>
+        <li>ယူနီဖောင်း — ၁ လပြည့်ပြီးနောက် <b>၂ ထည်</b>ရရှိမည်၊ <b>ဗုဒ္ဓဟူးနေ့တိုင်း ၀၉:၀၀–၀၉:၃၀</b> <b>၄ လွှာ</b>တွင် ထုတ်ယူနိုင်သည်<br>
+          <small style="color:var(--muted);">ဝတ်စားဆင်ယင်မှု တင်းကျပ်စွာမသတ်မှတ်ပါ၊ ကုမ္ပဏီအင်္ကျီ မဝတ်လည်းရသည် — သို့သော် စက်ရုံအတွင်း ဝင်ရောက်တိုင်း <b>ဝန်ထမ်းကတ်ကို အမြဲတပ်ဆင်ထားရမည်</b></small></li>
+        <li>ဥပဒေအရ လူမှုဖူလုံရေး</li>`,
+      ben_holiday_h2:"ရုံးပိတ်ရက်နှင့် လပ်",
+      ben_holiday_list:`<li>နှစ်စဉ် ရုံးပိတ်ရက် <b>၁၃ ရက်</b> — အတိအကျရက်စွဲများကို <b>အလုပ်ဝင်ရက် ပထမနေ့ ပေးအပ်သော ပိတ်ရက်ကတ်</b>တွင် ကြည့်ပါ</li>
+        <li>နှစ်စဉ် အားလပ်ရက် <b>၆ ရက်</b> — အလုပ်ဝင်ပြီး ၁ နှစ်ပြည့်မှ စတင်အသုံးပြုနိုင်ပြီး နောက်နှစ်အထိ သုံးနိုင်သည်<br>
+          <small style="color:var(--muted);">ဥပမာ- ၁၈/၀၈/၂၅ တွင် အလုပ်စ — ၁၈/၀၈/၂၆ မှ ၁၈/၀၈/၂၇ အထိ သုံးနိုင်သည်၊ မသုံးပါက <b>ငွေအဖြစ် အမြဲပြန်ပေးမည်</b></small></li>`,
+      ben_personal_h2:"ကိစ္စလပ်",
+      ben_personal_list:`<li>အလုပ်သမားဥပဒေအရ ဝန်ထမ်းများသည် နှစ်စဉ် <b>လုပ်ခပါ ကိစ္စလပ် ၃ ရက်</b> ရရှိခွင့်ရှိသည်</li>
+        <li>ကိုယ်တိုင်ဆောင်ရွက်ရမည့် လိုအပ်သော ကိစ္စများအတွက် အသုံးပြုသည်၊ ဥပမာ- အစိုးရဌာန ကိစ္စ၊ အိမ်ထောင်စု အရေးပေါ်ကိစ္စများ</li>
+        <li><b>အသုံးပြုနည်း —</b> လပ်ခံယူလိုသည့်ရက်မတိုင်မီ လပ်လျှောက်လွှာကို ကြိုတင်တင်သွင်းပြီး ရက်စွဲနှင့် အကြောင်းအရင်းကို ရှင်းလင်းစွာဖော်ပြရမည်၊ ကြီးကြပ်သူ ခွင့်ပြုမှသာ လပ်မှန်ကန်သည်</li>
+        <li>ကြိုတင်အကြောင်းကြားမရသည့် အရေးပေါ်ကိစ္စများတွင် ကြီးကြပ်သူကို အမြန်ဆုံးအကြောင်းကြားပြီး အလုပ်ပြန်ရောက်သည်နှင့် လပ်လျှောက်လွှာကို ချက်ချင်းနောက်ကျတင်သွင်းပါ</li>`,
+      ben_maternity_h2:"ကိုယ်ဝန်ဆောင်လပ်",
+      ben_maternity_list:`<li>အမျိုးသမီးဝန်ထမ်းများသည် တစ်ကြိမ်ကိုယ်ဝန်အတွက် <b>အများဆုံး ၁၂၀ ရက်</b> ခံစားခွင့်ရှိသည် (ကိုယ်ဝန်စစ်ဆေးခြင်းလပ်နှင့် လပ်ကာလအတွင်းရှိ ရုံးပိတ်ရက်များ ပါဝင်သည်)</li>
+        <li><b>ကုမ္ပဏီက ပထမ ၆၀ ရက်အတွက် လစာအပြည့်ပေးမည်</b></li>
+        <li>ကျန်ရက်များအတွက် <b>လူမှုဖူလုံရေး</b>မှ အခွင့်အရေးအရ ရရှိနိုင်သည် (ပျမ်းမျှလစာ၏ ခန့်မှန်း ၅၀% ခန့်၊ အများဆုံး ၉၀ ရက်)</li>
+        <li>လပ်စာရွက်များပြင်ဆင်နိုင်ရန်နှင့် အန္တရာယ်ရှိသည့်နေရာမှ ဥပဒေအရ ရွှေ့ပြောင်းပေးနိုင်ရန် ကိုယ်ဝန်ရှိကြောင်း ကြီးကြပ်သူ/HR ကို အမြန်ဆုံးအကြောင်းကြားရမည်</li>`,
+      ben_maternity_note:"ယခင် ၉၈ ရက်မှ တိုးမြှင့်ထားခြင်းဖြစ်ပြီး အလုပ်သမားကာကွယ်ရေးဥပဒေ (အမှတ် ၉) ဘီအီး ၂၅၆၈ အရ ၂၀၂၅ ဒီဇင်ဘာ ၇ ရက်မှစတင်၍ အာဏာတည်သည်",
+      ben_spouse_h2:"ဇနီး/ခင်ပွန်း မွေးဖွားစောင့်ရှောက်ခွင့်လပ်",
+      ben_spouse_list:`<li><b>ဇနီး/ခင်ပွန်း ကလေးမွေးဖွားသည့်</b> ဝန်ထမ်းသည် တစ်ကြိမ်မွေးဖွားမှုအတွက် <b>အများဆုံး ၁၅ ရက်</b> လပ်ခံစားခွင့်ရှိသည်</li>
+        <li>မွေးဖွားပြီး <b>၉၀ ရက်အတွင်း</b> အသုံးပြုရမည် (ဆက်တိုက် သို့မဟုတ် ခွဲ၍ ယူနိုင်သည်)</li>
+        <li>လပ်ကာလအတွင်း <b>လစာ ၁၀၀% အပြည့်</b>ရရှိမည်</li>
+        <li>ကြီးကြပ်သူထံ လပ်လျှောက်လွှာတင်ပြီး ဇနီး/ခင်ပွန်း မွေးဖွားရက်ကို အကြောင်းကြားပါ</li>`,
+      ben_spouse_note:"အလုပ်သမားကာကွယ်ရေးဥပဒေ (အမှတ် ၉) ဘီအီး ၂၅၆၈ ပုဒ်မ ၄၁/၁ အရ အခွင့်အရေးအသစ်ဖြစ်သည်",
+      ben_shifttime_h2:"ဆိုင်းအလိုက် အလုပ်ချိန်",
+      ben_shifttime_daily_label:"နေ့စားဝန်ထမ်း",
+      ben_shifttime_daily_list:`<li>မနက်ဆိုင်း 08:00–17:20</li><li>ညဆိုင်း 20:00–05:20</li>`,
+      ben_shifttime_monthly_label:"လစဉ်ဝန်ထမ်း",
+      ben_shifttime_monthly_list:`<li>မနက်ဆိုင်း 08:00–16:40</li><li>နေ့လယ်ဆိုင်း 16:00–00:40</li><li>ညဆိုင်း 00:00–08:40</li>`,
+      ben_shifttime_note:"Office (IDL): အလှည့်ကျပိတ်ရက် (ကုမ္ပဏီက ဇယားချသည်) · Production (DL): ၆ရက်အလုပ် ၁ရက်ပိတ် (အလှည့်ကျဇယား)",
+      ct_recruit_title:"ဝန်ထမ်းစုဆောင်းရေးဌာန",
+      ct_recruit_loc:"စုဆောင်းရေးအခန်း (လုံခြုံရေးဂိတ်နောက်ဖေး)",
+      ct_recruit_body:"ကိစ္စများ — အလုပ်ခန့်အပ်ခြင်း၊ အလုပ်ထွက်ခြင်း၊ မျက်နှာစကင် အလုပ်မလုပ်ခြင်း (စက်ချို့ယွင်း)",
+      ct_payroll_title:"လစာဌာန",
+      ct_payroll_loc:"၃လွှာ",
+      ct_payroll_body:"ကိစ္စများ — လစာမမှန်ခြင်း၊ လုပ်ခမပြည့်စုံခြင်း",
+      ct_time_title:"အချိန်စစ်ဆေးရေးဌာန",
+      ct_time_loc:"၃လွှာ",
+      ct_time_body:`မျက်နှာစကင်ရိုက်ပြီးသော်လည်း အချိန်မပေါ်ခြင်း၊ OT ပယ်ဖျက်ခံရခြင်း၊ ESS စနစ်တွင် လပ်မတင်နိုင်/ထည့်သွင်း၍မရခြင်း<br>
+        📘 <a href="https://online.anyflip.com/npqbq/mjvl/mobile/index.html" target="_blank" rel="noopener">ESS စနစ်အသုံးပြုနည်းလက်စွဲ</a>`,
+      ct_ga_title:"GA ဌာန (General Affairs)",
+      ct_ga_body:"ကိစ္စများ — ယူနီဖောင်း၊ နေထိုင်မှု/အိပ်ဆောင်၊ အစားအစာနှင့် အခြားအထွေထွေကိစ္စများ",
+      ct_box_title:"အကြံပြုချက်ပုံး",
+      ct_box_body1:"အကြံပြုချက် သို့မဟုတ် အကြံဉာဏ်ရှိပါက အနီရောင်ပုံး ၂ နေရာတွင် ချထားနိုင်သည်-",
+      ct_box_body2:"• စားသောက်ဆိုင် (၁ လုံး)<br>• ၄လွှာ မီးလောင်လျှင်ထွက်ပေါက် လှေကားထစ် မြောက်ဘက်",
+    },
+  };
+  let currentLang = 'th';
+
+  function applyLang(lang){
+    currentLang = lang;
+    const dict = I18N[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const key = el.getAttribute('data-i18n');
+      if(dict[key] !== undefined) el.textContent = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-html]').forEach(el=>{
+      const key = el.getAttribute('data-i18n-html');
+      if(dict[key] !== undefined) el.innerHTML = dict[key];
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{
+      const key = el.getAttribute('data-i18n-placeholder');
+      if(dict[key] !== undefined) el.placeholder = dict[key];
+    });
+    document.querySelectorAll('.lang-btn').forEach(b=>{
+      b.classList.toggle('active', b.dataset.lang === lang);
+    });
+    // keep the "current tab" label in the menu button in sync
+    const activeTabBtn = document.querySelector('.tab.active');
+    const menuCurrentEl = document.getElementById('menuCurrent');
+    if(activeTabBtn && menuCurrentEl) menuCurrentEl.textContent = activeTabBtn.textContent.trim();
+    // refresh rota team button labels if that tab has rendered
+    if(typeof renderRotaTeams === 'function') renderRotaTeams();
+  }
+  document.querySelectorAll('.lang-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>applyLang(btn.dataset.lang));
+  });
+</script>
 
 <script>
   // ---- rota tab ----
@@ -897,7 +1337,7 @@
     ROTA_TEAMS[rotaGroup].forEach(t=>{
       const b = document.createElement('button');
       b.className = 'rota-teambtn' + (t===rotaTeam ? ' active' : '');
-      b.textContent = 'ทีม ' + t;
+      b.textContent = (I18N[currentLang].team_prefix || 'ทีม') + ' ' + t;
       b.addEventListener('click', ()=>{ rotaTeam = t; renderRotaTeams(); renderRotaImg(); });
       wrap.appendChild(b);
     });
@@ -925,14 +1365,27 @@
     document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
     document.querySelectorAll('main section').forEach(s=>s.classList.remove('active'));
     const btn = document.querySelector(`.tab[data-tab="${tabId}"]`);
-    if(btn) btn.classList.add('active');
+    if(btn){
+      btn.classList.add('active');
+      document.getElementById('menuCurrent').textContent = btn.textContent.trim();
+    }
     document.getElementById(tabId).classList.add('active');
   }
   document.querySelectorAll('.tab').forEach(btn=>{
     btn.addEventListener('click',()=>{
       switchTab(btn.dataset.tab);
+      document.getElementById('tabbar').classList.remove('show');
       window.scrollTo({top:0,behavior:'smooth'});
     });
+  });
+  const menuBtn = document.getElementById('menuBtn');
+  const menuPanel = document.getElementById('tabbar');
+  menuBtn.addEventListener('click', (e)=>{
+    e.stopPropagation();
+    menuPanel.classList.toggle('show');
+  });
+  document.addEventListener('click', (e)=>{
+    if(!e.target.closest('.menuwrap')) menuPanel.classList.remove('show');
   });
 
   // ---- search ----
@@ -1004,10 +1457,15 @@
     const total = travel+stay;
     const box = document.getElementById('allowanceResult');
     box.classList.add('show');
-    box.innerHTML = `วันเต็ม: <b>${fullDays} วัน</b> · วันครึ่งวัน: <b>${halfDays} วัน</b><br>
-      ค่าเดินทาง: ${travel.toLocaleString()} บาท<br>
-      ค่าที่พัก: ${stay.toLocaleString()} บาท<br>
-      <div class="big">รวม ${total.toLocaleString()} บาท</div>`;
+    box.innerHTML = `
+      <div class="rh-label">ยอดรวมโดยประมาณ</div>
+      <div class="rh-amount">${total.toLocaleString()}<span>บาท</span></div>
+      <div class="rh-breakdown">
+        <div class="rh-item">วันเต็ม<b>${fullDays} วัน</b></div>
+        <div class="rh-item">วันครึ่งวัน<b>${halfDays} วัน</b></div>
+        <div class="rh-item">ค่าเดินทาง<b>${travel.toLocaleString()} ฿</b></div>
+        <div class="rh-item">ค่าที่พัก<b>${stay.toLocaleString()} ฿</b></div>
+      </div>`;
   }
 
   function calcOT(){
@@ -1018,8 +1476,14 @@
     const total = hourly*mult*hours;
     const box = document.getElementById('otResult');
     box.classList.add('show');
-    box.innerHTML = `ค่าแรงต่อชั่วโมง: ${hourly.toFixed(2)} บาท × ${mult} เท่า × ${hours} ชม.<br>
-      <div class="big">≈ ${total.toLocaleString(undefined,{maximumFractionDigits:2})} บาท</div>`;
+    box.innerHTML = `
+      <div class="rh-label">ค่า OT โดยประมาณ</div>
+      <div class="rh-amount">${total.toLocaleString(undefined,{maximumFractionDigits:2})}<span>บาท</span></div>
+      <div class="rh-breakdown">
+        <div class="rh-item">ค่าแรง/ชม.<b>${hourly.toFixed(2)} ฿</b></div>
+        <div class="rh-item">อัตรา<b>${mult} เท่า</b></div>
+        <div class="rh-item">ชั่วโมง OT<b>${hours} ชม.</b></div>
+      </div>`;
   }
 
   function calcOTMonthly(){
@@ -1031,8 +1495,14 @@
     const total = hourly*mult*hours;
     const box = document.getElementById('otResultMonthly');
     box.classList.add('show');
-    box.innerHTML = `ค่าจ้างต่อวัน: ${daily.toFixed(2)} บาท → ต่อชั่วโมง: ${hourly.toFixed(2)} บาท × ${mult} เท่า × ${hours} ชม.<br>
-      <div class="big">≈ ${total.toLocaleString(undefined,{maximumFractionDigits:2})} บาท</div>`;
+    box.innerHTML = `
+      <div class="rh-label">ค่า OT โดยประมาณ</div>
+      <div class="rh-amount">${total.toLocaleString(undefined,{maximumFractionDigits:2})}<span>บาท</span></div>
+      <div class="rh-breakdown">
+        <div class="rh-item">ค่าแรง/วัน<b>${daily.toFixed(2)} ฿</b></div>
+        <div class="rh-item">ค่าแรง/ชม.<b>${hourly.toFixed(2)} ฿</b></div>
+        <div class="rh-item">อัตรา<b>${mult} เท่า</b></div>
+      </div>`;
   }
 
   // ---- checklist (resets daily via localStorage date key) ----
