@@ -91,6 +91,38 @@
   .tab:hover{color:#fff;}
   .tab.active{color:#fff;border-bottom-color:var(--gold);}
 
+  /* ===== header search ===== */
+  .searchwrap{position:relative;max-width:480px;margin:0 auto 22px;}
+  #searchBox{
+    width:100%;padding:12px 16px;border-radius:12px;border:none;
+    font-family:'Sarabun',sans-serif;font-size:15px;
+    background:rgba(255,255,255,.14);color:#fff;
+  }
+  #searchBox::placeholder{color:rgba(255,255,255,.65);}
+  #searchBox:focus{outline:2px solid var(--gold);background:rgba(255,255,255,.22);}
+  .searchresults{
+    position:absolute;top:calc(100% + 6px);left:0;right:0;
+    background:#fff;border-radius:12px;box-shadow:0 8px 24px rgba(11,46,91,.25);
+    overflow:hidden;display:none;z-index:20;max-height:340px;overflow-y:auto;
+    text-align:left;
+  }
+  .searchresults.show{display:block;}
+  .sr-item{
+    padding:12px 16px;border-bottom:1px solid var(--line);cursor:pointer;
+  }
+  .sr-item:last-child{border-bottom:none;}
+  .sr-item:hover{background:var(--bg);}
+  .sr-item .sr-title{font-weight:700;color:var(--navy);font-size:14.5px;}
+  .sr-item .sr-tab{font-size:11.5px;color:var(--blue);font-weight:600;margin-left:6px;}
+  .sr-item .sr-snippet{font-size:12.5px;color:var(--muted);margin-top:2px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+  .sr-empty{padding:14px 16px;font-size:13.5px;color:var(--muted);}
+  .card.highlight{animation:flash 1.4s ease;}
+  @keyframes flash{
+    0%{box-shadow:0 0 0 3px var(--gold);}
+    100%{box-shadow:0 1px 2px rgba(11,46,91,.04);}
+  }
+
   main{max-width:960px;margin:0 auto;padding:28px 18px 80px;}
   section{display:none;animation:fade .25s ease;}
   section.active{display:block;}
@@ -329,6 +361,10 @@
   <div class="eyebrow">UNITECH PCB (THAILAND) CO., LTD.</div>
   <h1>สวัสดิการและการทำงาน</h1>
   <p class="sub">คู่มือพนักงาน — สิทธิ สวัสดิการ และข้อมูลที่ควรรู้</p>
+  <div class="searchwrap">
+    <input type="text" id="searchBox" placeholder="ค้นหา เช่น ลาป่วย, OT, สแกนหน้า..." autocomplete="off">
+    <div class="searchresults" id="searchResults"></div>
+  </div>
   <div class="belt" id="tabbar">
     <button class="tab active" data-tab="benefits">สวัสดิการ</button>
     <button class="tab" data-tab="calc">คำนวณค่าแรง</button>
@@ -885,14 +921,78 @@
 
 <script>
   // ---- tabs ----
+  function switchTab(tabId){
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('main section').forEach(s=>s.classList.remove('active'));
+    const btn = document.querySelector(`.tab[data-tab="${tabId}"]`);
+    if(btn) btn.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+  }
   document.querySelectorAll('.tab').forEach(btn=>{
     btn.addEventListener('click',()=>{
-      document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
-      document.querySelectorAll('main section').forEach(s=>s.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById(btn.dataset.tab).classList.add('active');
+      switchTab(btn.dataset.tab);
       window.scrollTo({top:0,behavior:'smooth'});
     });
+  });
+
+  // ---- search ----
+  const TAB_LABELS = {};
+  document.querySelectorAll('.tab').forEach(b=>{ TAB_LABELS[b.dataset.tab]=b.textContent.trim(); });
+
+  const searchIndex = [];
+  document.querySelectorAll('main section').forEach(section=>{
+    section.querySelectorAll('.card').forEach((card,i)=>{
+      const h2 = card.querySelector('h2');
+      if(!h2) return;
+      const title = h2.textContent.trim();
+      const text = card.textContent.trim().replace(/\s+/g,' ');
+      const id = 'srcard-' + section.id + '-' + i;
+      card.id = id;
+      searchIndex.push({ id, tabId: section.id, title, text });
+    });
+  });
+
+  const searchBox = document.getElementById('searchBox');
+  const searchResults = document.getElementById('searchResults');
+
+  function renderResults(query){
+    const q = query.trim().toLowerCase();
+    if(!q){ searchResults.classList.remove('show'); searchResults.innerHTML=''; return; }
+    const matches = searchIndex.filter(it => it.text.toLowerCase().includes(q)).slice(0,8);
+    if(!matches.length){
+      searchResults.innerHTML = '<div class="sr-empty">ไม่พบผลลัพธ์สำหรับ “' + query + '”</div>';
+      searchResults.classList.add('show');
+      return;
+    }
+    searchResults.innerHTML = matches.map(m=>{
+      const idx = m.text.toLowerCase().indexOf(q);
+      const start = Math.max(0, idx-40);
+      const snippet = (start>0?'…':'') + m.text.slice(start, idx+q.length+60) + '…';
+      return `<div class="sr-item" data-id="${m.id}" data-tab="${m.tabId}">
+        <span class="sr-title">${m.title}</span><span class="sr-tab">${TAB_LABELS[m.tabId]||''}</span>
+        <div class="sr-snippet">${snippet}</div>
+      </div>`;
+    }).join('');
+    searchResults.classList.add('show');
+    searchResults.querySelectorAll('.sr-item').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        switchTab(el.dataset.tab);
+        searchResults.classList.remove('show');
+        searchBox.value='';
+        setTimeout(()=>{
+          const card = document.getElementById(el.dataset.id);
+          if(card){
+            card.scrollIntoView({behavior:'smooth', block:'center'});
+            card.classList.add('highlight');
+            setTimeout(()=>card.classList.remove('highlight'), 1500);
+          }
+        }, 120);
+      });
+    });
+  }
+  searchBox.addEventListener('input', ()=>renderResults(searchBox.value));
+  document.addEventListener('click', (e)=>{
+    if(!e.target.closest('.searchwrap')) searchResults.classList.remove('show');
   });
 
   // ---- calculators ----
